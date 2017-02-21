@@ -131,15 +131,14 @@ namespace SweetEditor.Build
                     PopPlayerSettings(settingsCache);
 
                     string e = "Erorr buildings player: " + error;
-                    Debug.LogError(e, this);
                     throw new Exception(e);
                 }
 
                 PostProcessBuild(buildPath);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                Debug.LogException(e, this);
             }
             finally
             {
@@ -209,7 +208,7 @@ namespace SweetEditor.Build
 
 		protected virtual void OnPushPlayerSettings(Dictionary<string, object> settingsCache)
 		{
-			
+
 		}
 
 
@@ -221,19 +220,19 @@ namespace SweetEditor.Build
 
 	    protected virtual void OnPopPlayerSettings(Dictionary<string, object> settingsCache)
 		{
-			
+
 		}
 
 
 		protected virtual void OnPreProcessBuild()
 		{
-			
+
 		}
 
 
 		protected virtual void OnPostProcessBuild(string playerPath)
 		{
-			
+
 		}
 
 

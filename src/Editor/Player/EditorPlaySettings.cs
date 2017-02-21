@@ -63,10 +63,7 @@ namespace SweetEditor.Build
                 }
             }
 
-            Vector2 mousePos = Input.mousePosition;
-            //settingsMenu.DropDown(new Rect(50, 50, 250, Mathf.Max(settings.Length, 1) * 20));
             settingsMenu.ShowAsContext();
-            UnityEngine.Debug.Log(string.Format("showing!"));
         }
 
 
