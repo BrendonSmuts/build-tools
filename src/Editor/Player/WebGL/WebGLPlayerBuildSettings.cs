@@ -32,12 +32,19 @@ namespace SweetEditor.Build
 	    {
 	        base.Reset();
 
+#if UNITY_5_5_OR_NEWER
 	        m_MemorySize = PlayerSettings.WebGL.memorySize;
 	        m_DataCaching = PlayerSettings.WebGL.dataCaching;
 	        m_Template = PlayerSettings.WebGL.template;
 	        m_CompressionFormat = PlayerSettings.WebGL.compressionFormat;
 	        m_ExceptionSupport = PlayerSettings.WebGL.exceptionSupport;
 	        m_DebugSymbols = PlayerSettings.WebGL.debugSymbols;
+#else
+	        m_MemorySize = PlayerSettings.GetPropertyInt("memorySize", BuildTargetGroup.WebGL);
+	        m_DataCaching = PlayerSettings.GetPropertyBool("dataCaching", BuildTargetGroup.WebGL);
+	        m_Template = PlayerSettings.GetPropertyString("template", BuildTargetGroup.WebGL);
+	        m_ExceptionSupport = (WebGLExceptionSupport)PlayerSettings.GetPropertyInt("exceptionSupport", BuildTargetGroup.WebGL);
+#endif
 	    }
 
 

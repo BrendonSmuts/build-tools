@@ -13,7 +13,7 @@ namespace SweetEditor.Build
 
 
 
-        
+
         public override BuildTarget BuildTarget
         {
             get
@@ -66,9 +66,11 @@ namespace SweetEditor.Build
         {
             switch (Application.platform)
             {
+#if UNITY_5_5_OR_NEWER
                 case RuntimePlatform.LinuxEditor:
                     m_TargetPlatform = StandalonePlatform.Linux;
                     break;
+#endif
                 case RuntimePlatform.OSXEditor:
                     m_TargetPlatform = StandalonePlatform.MacOS;
                     break;

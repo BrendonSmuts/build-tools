@@ -50,11 +50,13 @@ namespace SweetEditor.Build
 	    {
 	        switch (Application.platform)
 	        {
+	#if UNITY_5_5_OR_NEWER
+                case RuntimePlatform.LinuxEditor:
+                    m_BuildTarget = BuildTarget.Linux;
+                    break;
+	#endif
 	            case RuntimePlatform.OSXEditor:
                     m_BuildTarget = BuildTarget.StandaloneOSXUniversal;
-	                break;
-	            case RuntimePlatform.LinuxEditor:
-	                m_BuildTarget = BuildTarget.StandaloneLinuxUniversal;
 	                break;
 	            default:
 	                m_BuildTarget = BuildTarget.StandaloneWindows;
