@@ -23,7 +23,6 @@ namespace SweetEditor.Build
 		[SerializeField] private BuildTarget m_BuildTarget = default(BuildTarget);
 		[SerializeField] private string[] m_BuildInclusionFilters = default(string[]);
 		[SerializeField, CompressionModeProperty] private string m_CompressionMode = default(string);
-		//[SerializeField] private string m_CompressedExtension = default(string);
 		[Header("Events")]
 		[SerializeField] private UnityEvent m_PreBuildEvent = default(UnityEvent);
 #if UNITY_5_5_OR_NEWER
@@ -52,21 +51,23 @@ namespace SweetEditor.Build
 	    {
 	        switch (Application.platform)
 	        {
-	#if UNITY_5_5_OR_NEWER
-                case RuntimePlatform.LinuxEditor:
-                    m_BuildTarget = BuildTarget.Linux;
-                    break;
-	#endif
+#if UNITY_5_5_OR_NEWER
+	            case RuntimePlatform.LinuxEditor:
+	                m_BuildTarget = BuildTarget.StandaloneLinuxUniversal;
+	                m_OutputPath = "AssetBundles/Linux";
+	                break;
+#endif
 	            case RuntimePlatform.OSXEditor:
                     m_BuildTarget = BuildTarget.StandaloneOSXUniversal;
+	                m_OutputPath = "AssetBundles/OSX";
 	                break;
 	            default:
 	                m_BuildTarget = BuildTarget.StandaloneWindows;
+	                m_OutputPath = "AssetBundles/Windows";
 	                break;
 	        }
 
 	        m_Id = m_BuildTarget.ToString().ToLower();
-	        m_OutputPath = "AssetBundles/" + m_BuildTarget;
 	        m_OutputExclusionFilters = new string[0];
 	        m_StrictMode = true;
 	        m_BuildInclusionFilters = new [] {"*"};
@@ -246,8 +247,8 @@ namespace SweetEditor.Build
 			    File.Copy(bundlePath, destinationPath, true);
 			}
 
-		    string buildTargetName = GetBuildTargetName(m_BuildTarget);
-		    File.Copy(GetBundlePath(buildTargetName), outputPath + buildTargetName, true);
+		    string manfiestFileName = GetManifestFileName();
+		    File.Copy(GetBundlePath(manfiestFileName), outputPath + buildTargetName, true);
 		    AssetDatabase.Refresh();
 		}
 
@@ -317,9 +318,16 @@ namespace SweetEditor.Build
 		}
 
 
-		private static string GetBuildTargetName(BuildTarget buildTarget)
+		private string GetManifestFileName()
 		{
-			return buildTarget.ToString();
+		    string[] splitPath = Path.GetFullPath(m_OutputPath).Split(Path.DirectorySeparatorChar);
+
+		    if (splitPath.Length == 0)
+		    {
+		        throw new InvalidOperationException(string.Format("The output path \"{0}\" is not valid.", m_OutputPath));
+		    }
+
+		    return splitPath[splitPath.Length - 1];
 		}
 
 		//TODO: Filter these??
