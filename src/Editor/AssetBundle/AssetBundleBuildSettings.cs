@@ -26,7 +26,9 @@ namespace SweetEditor.Build
 		//[SerializeField] private string m_CompressedExtension = default(string);
 		[Header("Events")]
 		[SerializeField] private UnityEvent m_PreBuildEvent = default(UnityEvent);
+#if UNITY_5_5_OR_NEWER
 	    [SerializeField] private PostBuildEvent m_DryRunBuildEvent = default(PostBuildEvent);
+#endif
 	    [SerializeField] private PostBuildEvent m_PostBuildEvent = default(PostBuildEvent);
 
 
@@ -70,7 +72,9 @@ namespace SweetEditor.Build
 	        m_BuildInclusionFilters = new [] {"*"};
 	        m_CompressionMode = new LZ4CompressionMode().Name;
 	        m_PreBuildEvent = new Button.ButtonClickedEvent();
+#if UNITY_5_5_OR_NEWER
 	        m_DryRunBuildEvent = new PostBuildEvent();
+#endif
 	        m_PostBuildEvent = new PostBuildEvent();
 	    }
 
@@ -113,16 +117,14 @@ namespace SweetEditor.Build
 				options |= BuildAssetBundleOptions.StrictMode;
 			}
 
-			string outputPath = Path.Combine(m_OutputPath, GetBuildTargetName(m_BuildTarget));
-
-			if (!Directory.Exists(outputPath))
+			if (!Directory.Exists(m_OutputPath))
 			{
-				Directory.CreateDirectory(outputPath);
+				Directory.CreateDirectory(m_OutputPath);
 			}
 
 #if UNITY_5_5_OR_NEWER
 			BuildAssetBundleOptions dryOptions = options | BuildAssetBundleOptions.DryRunBuild;
-			AssetBundleManifest dryManifest = BuildPipeline.BuildAssetBundles(outputPath, builds.ToArray(), dryOptions, m_BuildTarget);
+			AssetBundleManifest dryManifest = BuildPipeline.BuildAssetBundles(m_OutputPath, builds.ToArray(), dryOptions, m_BuildTarget);
 
 			if (dryManifest == null)
 			{
@@ -143,7 +145,7 @@ namespace SweetEditor.Build
 				preBuildFileExisted[i] = BuildPipeline.GetCRCForAssetBundle(fileIn, out preBuildCRCs[i]);
 			}
 
-			AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(outputPath, builds.ToArray(), options, m_BuildTarget);
+			AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(m_OutputPath, builds.ToArray(), options, m_BuildTarget);
 
 			if (manifest == null)
 			{
