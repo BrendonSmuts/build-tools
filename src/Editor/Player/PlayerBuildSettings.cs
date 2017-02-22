@@ -136,10 +136,6 @@ namespace SweetEditor.Build
 
                 PostProcessBuild(buildPath);
             }
-            catch (Exception e)
-            {
-                Debug.LogException(e, this);
-            }
             finally
             {
                 PopPlayerSettings(settingsCache);
