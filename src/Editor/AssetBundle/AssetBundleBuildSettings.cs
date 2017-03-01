@@ -129,9 +129,7 @@ namespace SweetEditor.Build
 
 			if (dryManifest == null)
 			{
-				string error = string.Format("AssetBundleBuildSettings ({0}): Error during dry run building asset bundles.", buildSettingsName);
-				Debug.LogError(error, this);
-				throw new Exception(error);
+				throw new Exception(string.Format("AssetBundleBuildSettings ({0}): Error during dry run building asset bundles.", buildSettingsName));
 			}
 
 		    m_DryRunBuildEvent.Invoke(dryManifest);
@@ -150,9 +148,7 @@ namespace SweetEditor.Build
 
 			if (manifest == null)
 			{
-				string error = string.Format("AssetBundleBuildSettings ({0}): Error building asset bundles.", buildSettingsName);
-				Debug.LogError(error, this);
-				throw new Exception(error);
+				throw new Exception(string.Format("AssetBundleBuildSettings ({0}): Error building asset bundles.", buildSettingsName));
 			}
 
 			var newBuilds = new List<AssetBundleBuild>(builds.Count);
@@ -248,7 +244,7 @@ namespace SweetEditor.Build
 			}
 
 		    string manfiestFileName = GetManifestFileName();
-		    File.Copy(GetBundlePath(manfiestFileName), outputPath + buildTargetName, true);
+		    File.Copy(GetBundlePath(manfiestFileName), outputPath, true);
 		    AssetDatabase.Refresh();
 		}
 

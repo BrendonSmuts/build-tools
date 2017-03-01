@@ -1,11 +1,14 @@
-﻿using System;
+﻿#if UNITY_5_5_OR_NEWER || UNITY_5_4_4
+#define AUTOMATIC_SIGNING
+#endif
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using SweetEngine.Info;
 using UnityEditor;
 using UnityEditor.iOS;
 using UnityEditor.iOS.Xcode;
-using UnityEditorInternal;
 using UnityEngine;
 using BuildPipeline = UnityEditor.iOS.BuildPipeline;
 
@@ -46,43 +49,50 @@ namespace SweetEditor.Build
 
 	        m_BundleIdentifier = PlayerSettings.bundleIdentifier;
 	        m_ScriptCallOptimization = PlayerSettings.iOS.scriptCallOptimization;
+
+#if AUTOMATIC_SIGNING
 	        m_AppleDeveloperTeamId = PlayerSettings.iOS.appleDeveloperTeamID;
+	        m_AutomaticSign = PlayerSettings.iOS.appleEnableAutomaticSigning;
 
 	        if (string.IsNullOrEmpty(m_AppleDeveloperTeamId))
 	        {
 	            m_AppleDeveloperTeamId = EditorPrefs.GetString(_DefaultiOSAutomaticSignTeamId);
 	        }
+#endif
 
 	        m_EnableOnDemandResources = PlayerSettings.iOS.useOnDemandResources;
 	        m_EnableAppSlicing = PlayerSettings.iOS.useOnDemandResources;
-		    m_AutomaticSign = PlayerSettings.iOS.appleEnableAutomaticSigning;
 	    }
 
 	    protected override void OnPushPlayerSettings(Dictionary<string, object> settingsCache)
 		{
 #if !UNITY_CLOUD
-			settingsCache["bundleIdentifier"] = PlayerSettings.bundleIdentifier;
+		    settingsCache["bundleIdentifier"] = PlayerSettings.bundleIdentifier;
 
-			PlayerSettings.bundleIdentifier = m_BundleIdentifier;
+		    PlayerSettings.bundleIdentifier = m_BundleIdentifier;
 #endif
 
-			settingsCache["scriptCallOptimization"] = PlayerSettings.iOS.scriptCallOptimization;
-			settingsCache["useOnDemandResources"] = PlayerSettings.iOS.useOnDemandResources;
+		    settingsCache["scriptCallOptimization"] = PlayerSettings.iOS.scriptCallOptimization;
+		    settingsCache["useOnDemandResources"] = PlayerSettings.iOS.useOnDemandResources;
+#if AUTOMATIC_SIGNING
 		    settingsCache["appleDeveloperTeamID"] = PlayerSettings.iOS.appleDeveloperTeamID;
 		    settingsCache["appleEnableAutomaticSigning"] = PlayerSettings.iOS.appleEnableAutomaticSigning;
+#endif
 
 		    bool useOnDemandResources = m_EnableOnDemandResources || m_EnableAppSlicing;
 
-			PlayerSettings.iOS.scriptCallOptimization = m_ScriptCallOptimization;
-			PlayerSettings.iOS.useOnDemandResources = useOnDemandResources;
+		    PlayerSettings.iOS.scriptCallOptimization = m_ScriptCallOptimization;
+		    PlayerSettings.iOS.useOnDemandResources = useOnDemandResources;
+#if UNITY_5_5_OR_NEWER || UNITY_5_4_4
 		    PlayerSettings.iOS.appleDeveloperTeamID = m_AppleDeveloperTeamId;
 		    PlayerSettings.iOS.appleEnableAutomaticSigning = m_AutomaticSign;
+#endif
 
 		    if (useOnDemandResources)
-			{
-				//BuildPipeline.collectResources += OnBuildPipelineCollectResources;
-				BuildPipeline.collectInitialInstallTags += OnBuildPipelineCollectInitialInstallTags;
-			}
+		    {
+		        //BuildPipeline.collectResources += OnBuildPipelineCollectResources;
+		        BuildPipeline.collectInitialInstallTags += OnBuildPipelineCollectInitialInstallTags;
+		    }
 		}
 
 
@@ -101,19 +111,18 @@ namespace SweetEditor.Build
 #endif
 		    TrySetValue<ScriptCallOptimizationLevel>((v) => PlayerSettings.iOS.scriptCallOptimization = v, "scriptCallOptimization", settingsCache);
 		    TrySetValue<bool>((v) => PlayerSettings.iOS.useOnDemandResources = v, "useOnDemandResources", settingsCache);
+#if AUTOMATIC_SIGNING
 		    TrySetValue<string>((v) => PlayerSettings.iOS.appleDeveloperTeamID = v, "appleDeveloperTeamID", settingsCache);
-
-#if !UNITY_5_5_OR_NEWER
 		    TrySetValue<bool>((v) => PlayerSettings.iOS.appleEnableAutomaticSigning = v, "appleEnableAutomaticSigning", settingsCache);
 #endif
 
 		    bool useOnDemandResources = m_EnableOnDemandResources || m_EnableAppSlicing;
 
-			if (useOnDemandResources)
-			{
-				BuildPipeline.collectResources -= OnBuildPipelineCollectResources;
-				BuildPipeline.collectInitialInstallTags -= OnBuildPipelineCollectInitialInstallTags;
-			}
+		    if (useOnDemandResources)
+		    {
+		        BuildPipeline.collectResources -= OnBuildPipelineCollectResources;
+		        BuildPipeline.collectInitialInstallTags -= OnBuildPipelineCollectInitialInstallTags;
+		    }
 
 		    TrySetValue<string>((v) => PlayerSettings.iOS.buildNumber = v, "buildNumber", settingsCache);
 		}

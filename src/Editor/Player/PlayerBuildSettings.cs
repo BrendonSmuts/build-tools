@@ -90,8 +90,7 @@ namespace SweetEditor.Build
 
                 if (sceneAsset == null)
                 {
-                    Debug.LogError("Missing scene asset reference in BuildSettings. Has this scene been deleted?");
-                    return;
+                    throw new BuildException("Missing scene asset reference in BuildSettings. Has this scene been deleted?");
                 }
 
                 scenes.Add(AssetDatabase.GetAssetPath(sceneAsset));
@@ -99,9 +98,7 @@ namespace SweetEditor.Build
 
             if (scenes.Count == 0)
             {
-                Debug.LogError(
-                    "No scene asset references in BuildSettings. At least one scene must be added when building a player.");
-                return;
+                throw new BuildException("No scene asset references in BuildSettings. At least one scene must be added when building a player.");
             }
 
             BuildOptions buildOptions = BuildOptions.None;
@@ -128,10 +125,7 @@ namespace SweetEditor.Build
 
                 if (!string.IsNullOrEmpty(error))
                 {
-                    PopPlayerSettings(settingsCache);
-
-                    string e = "Erorr buildings player: " + error;
-                    throw new Exception(e);
+                    throw new BuildException("Error building player: " + error);
                 }
 
                 PostProcessBuild(buildPath);
