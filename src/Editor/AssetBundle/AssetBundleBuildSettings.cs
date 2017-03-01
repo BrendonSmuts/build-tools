@@ -280,6 +280,11 @@ namespace SweetEditor.Build
 			    {
 			        string[] assets = AssetDatabase.GetAssetPathsFromAssetBundle(bundleName);
 
+			        if (assets.Length == 0)
+			        {
+			            continue;
+			        }
+
 			        builds.Add(new AssetBundleBuild
 			        {
 			            assetBundleName = bundleName,
