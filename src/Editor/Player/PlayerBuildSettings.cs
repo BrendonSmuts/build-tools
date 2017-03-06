@@ -289,6 +289,14 @@ namespace SweetEditor.Build
 	        else
 	        {
 	            manifest = AssetDatabase.LoadAssetAtPath<BuildManifest>(manifestPath);
+
+	            if (manifest == null)
+	            {
+	                throw new BuildException(
+	                    string.Format(
+	                        "Failed to load build manifest at path \"{0}\", this location is reserved. If the asset at this path is missing a script reference try deletingit.",
+	                        manifestPath));
+	            }
 	        }
 
 	        SerializedObject soManifest = new SerializedObject(manifest);
