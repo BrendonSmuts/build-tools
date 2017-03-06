@@ -80,6 +80,18 @@ namespace SweetEditor.Build
         [ContextMenu("Run")]
         public void Run()
         {
+            Run(false);
+        }
+
+        [ContextMenu("Run and Deploy")]
+        public void RunAndDeploy()
+        {
+            Run(true);
+        }
+
+
+        public void Run(bool deploy)
+        {
             AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
 
             List<string> scenes = new List<string>(m_Scenes.Length);
@@ -107,6 +119,11 @@ namespace SweetEditor.Build
             {
                 buildOptions |= BuildOptions.Development;
                 buildOptions |= BuildOptions.AllowDebugging;
+            }
+
+            if (deploy)
+            {
+                buildOptions |= BuildOptions.AutoRunPlayer;
             }
 
             string buildPath = PrepareBuildPath(m_OutputPath);
