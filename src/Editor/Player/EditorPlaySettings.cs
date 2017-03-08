@@ -8,26 +8,34 @@ using UnityEngine.Events;
 namespace SweetEditor.Build
 {
     [CreateAssetMenu(menuName = "Build Settings/Editor Play", order = 10)]
-    public class EditorPlaySettings : ScriptableObject
+    public class EditorPlaySettings : ScriptableObject, IBuildSettings
     {
         private static readonly string _LastPlayKey = "lastPlaySettings";
-        [SerializeField] private string m_SettingsName = default(string);
+        [SerializeField] private string m_Id = default(string);
         [SerializeField] private SceneAsset m_RunScene = default(SceneAsset);
         [SerializeField] private string m_Defines = default(string);
         [SerializeField] private UnityEvent m_PreRunEvent = default(UnityEvent);
 
 
 
-        [ContextMenu("Play")]
-        private void Play()
+        
+        public string Id
         {
+            get { return m_Id; }
+        }
+
+
+
+        [ContextMenu("Play")]
+        public void Run()
+        {
+            EditorPrefs.SetString(BuildUtility.GetLastSettingsKey<EditorPlaySettings>(), m_Id);
+
             if (m_RunScene == null)
             {
                 Debug.LogWarning(string.Format("No run scene linked in settings {0}.", name), this);
                 return;
             }
-
-            EditorPrefs.SetString(_LastPlayKey, m_SettingsName);
 
             PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup,
                 m_Defines);
@@ -39,53 +47,10 @@ namespace SweetEditor.Build
         }
 
 
-
-        [MenuItem("Edit/Play with Settings", priority = 150)]
-        private static void PlayWithSettings()
+        [MenuItem("Edit/Play Last", priority = 151)]
+        public static void RunWithLastSettings()
         {
-            GenericMenu settingsMenu = new GenericMenu();
-
-            EditorPlaySettings[] settings = AssetDatabase.FindAssets("t:EditorPlaySettings")
-                .Select<string, string>(AssetDatabase.GUIDToAssetPath)
-                .Select<string, EditorPlaySettings>(AssetDatabase.LoadAssetAtPath<EditorPlaySettings>)
-                .ToArray();
-
-            if (settings.Length == 0)
-            {
-                settingsMenu.AddItem(new GUIContent("No Play Settings Found"), false, () => Debug.Log("Pressed"));
-            }
-            else
-            {
-                for (int i = 0; i < settings.Length; i++)
-                {
-                    EditorPlaySettings s = settings[i];
-                    settingsMenu.AddItem(new GUIContent(s.m_SettingsName), false, OnMenuItemClicked, s);
-                }
-            }
-
-            settingsMenu.ShowAsContext();
-        }
-
-
-        [MenuItem("Edit/Play with Last Settings", priority = 151)]
-        private static void PlayWithLastSettings()
-        {
-            string lastPlaySettings = EditorPrefs.GetString(_LastPlayKey, string.Empty);
-
-            EditorPlaySettings s = AssetDatabase.FindAssets("t:EditorPlaySettings")
-                .Select<string, string>(AssetDatabase.GUIDToAssetPath)
-                .Select<string, EditorPlaySettings>(AssetDatabase.LoadAssetAtPath<EditorPlaySettings>)
-                .FirstOrDefault(eps => string.Equals(eps.m_SettingsName, lastPlaySettings));
-
-            if (s != null)
-            {
-                s.Play();
-            }
-        }
-
-        private static void OnMenuItemClicked(object userdata)
-        {
-            ((EditorPlaySettings)userdata).Play();
+            BuildUtility.GetLastBuildSettings<EditorPlaySettings>().Run();
         }
     }
 }

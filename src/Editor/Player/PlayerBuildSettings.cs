@@ -12,6 +12,9 @@ using Debug = UnityEngine.Debug;
 
 namespace SweetEditor.Build
 {
+	/// <summary>
+	/// 
+	/// </summary>
     public abstract class PlayerBuildSettings : ScriptableObject, IBuildSettings
     {
         [SerializeField] private string m_Id = default(string);
@@ -31,27 +34,9 @@ namespace SweetEditor.Build
         public abstract BuildTarget BuildTarget { get; }
 
 
-        public string OutputPath
-        {
-            get { return m_OutputPath; }
-        }
-
-
-        public bool IsDevelopment
-        {
-            get { return m_IsDevelopment; }
-        }
-
-
         public string Id
         {
             get { return m_Id; }
-        }
-
-
-        public SceneAsset[] Scenes
-        {
-            get { return m_Scenes; }
         }
 
 
@@ -77,21 +62,34 @@ namespace SweetEditor.Build
         }
 
 
-        [ContextMenu("Run")]
+        [ContextMenu("Build")]
         public void Run()
         {
             Run(false);
         }
 
-        [ContextMenu("Run and Deploy")]
+        [ContextMenu("Build and Run")]
         public void RunAndDeploy()
         {
             Run(true);
         }
 
+        [MenuItem("File/Build Last", priority = 0)]
+        public static void RunWithLastSettings()
+		{
+            BuildUtility.GetLastBuildSettings<PlayerBuildSettings>().Run();
+		}
+
+        [MenuItem("File/Build and Run Last", priority = 0)]
+        public static void RunAndDeployWithLastSettings()
+		{
+            BuildUtility.GetLastBuildSettings<PlayerBuildSettings>().RunAndDeploy();
+		}
+
 
         public void Run(bool deploy)
         {
+            EditorPrefs.SetString(BuildUtility.GetLastSettingsKey<PlayerBuildSettings>(), m_Id);
             AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
 
             List<string> scenes = new List<string>(m_Scenes.Length);

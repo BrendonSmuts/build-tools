@@ -5,8 +5,8 @@ namespace SweetEditor.Build
 {
     public class MissingBuildSettingsException : Exception
     {
-        public MissingBuildSettingsException(string id)
-            : base(string.Format("Could not locate a PlayerBuildSettings object with id {0}", id))
+        public MissingBuildSettingsException(Type type, string id)
+            : base(string.Format("Could not locate a {0} object with id {1}", type.Name, id))
         {
 
         }

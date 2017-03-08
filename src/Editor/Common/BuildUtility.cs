@@ -10,6 +10,11 @@ namespace SweetEditor.Build
 {
     public static class BuildUtility
     {
+        private static readonly string _LastPlayKey = "lastPlaySettings";
+
+
+
+
         [UsedImplicitly]
         private static void RunPlayerBuildSettingsCmdLine()
         {
@@ -82,7 +87,13 @@ namespace SweetEditor.Build
         }
 
 
-        private static TBuildSettings FindBuildSettings<TBuildSettings>(string id)
+        public static TBuildSettings FindBuildSettings<TBuildSettings>(string id)
+            where TBuildSettings : ScriptableObject, IBuildSettings
+        {
+            return FindBuildSettings<TBuildSettings>(id, false);
+        }
+
+        public static TBuildSettings FindBuildSettings<TBuildSettings>(string id, bool throwOnMissing)
             where TBuildSettings : ScriptableObject, IBuildSettings
         {
             TBuildSettings buildSettings = AssetDatabase.FindAssets("t:" + typeof(TBuildSettings).Name)
@@ -90,12 +101,25 @@ namespace SweetEditor.Build
                 .Select<string, TBuildSettings>(AssetDatabase.LoadAssetAtPath<TBuildSettings>)
                 .FirstOrDefault(abbs => string.Equals(abbs.Id, id, StringComparison.OrdinalIgnoreCase));
 
-            if (buildSettings == null)
+            if (throwOnMissing &&
+                buildSettings == null)
             {
-                throw new MissingBuildSettingsException(id);
+                throw new MissingBuildSettingsException(typeof(TBuildSettings), id);
             }
 
             return buildSettings;
+        }
+
+
+        public static TBuildSettings GetLastBuildSettings<TBuildSettings>()
+            where TBuildSettings : ScriptableObject, IBuildSettings
+        {
+            return FindBuildSettings<TBuildSettings>(EditorPrefs.GetString(GetLastSettingsKey<TBuildSettings>(), string.Empty), false);
+        }
+
+        public static string GetLastSettingsKey<TBuildSettings>()
+        {
+            return string.Format("{0}.{1}", typeof(TBuildSettings).Name, _LastPlayKey);
         }
     }
 }
