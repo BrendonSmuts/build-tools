@@ -23,10 +23,10 @@ namespace SweetEditor.Build
         {
             int buttonsIntValue = 0;
             int enumLength = property.enumNames.Length;
-            int rows = Mathf.Clamp(((BuildEnumFlagsAttribute) attribute).Rows, 1, enumLength);
+            int rows = Mathf.Clamp(((BuildEnumFlagsAttribute)attribute).Rows, 1, enumLength);
             int buttonIndex = 0;
 
-            int buttonPerRow = enumLength/rows;
+            int buttonPerRow = enumLength / rows;
             int remainderButtons = enumLength % rows;
 
             bool[] buttonPressed = new bool[enumLength];

@@ -1,9 +1,9 @@
 namespace SweetEditor.Build
 {
-	public enum IdiomDeviceRequirement
-	{
-		iPhone,
-		iPad,
-		Watch,
-	}
+    public enum IdiomDeviceRequirement
+    {
+        iPhone,
+        iPad,
+        Watch,
+    }
 }

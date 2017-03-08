@@ -18,7 +18,7 @@ namespace SweetEditor.Build
 
 
 
-        
+
         public string Id
         {
             get { return m_Id; }

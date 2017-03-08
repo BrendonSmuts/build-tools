@@ -3,12 +3,12 @@
 
 namespace SweetEditor.Build
 {
-	[Flags]
-	public enum ScreenSizeRequirement
-	{
-		Small,
-		Normal,
-		Large,
-		XLarge
-	}
+    [Flags]
+    public enum ScreenSizeRequirement
+    {
+        Small,
+        Normal,
+        Large,
+        XLarge
+    }
 }

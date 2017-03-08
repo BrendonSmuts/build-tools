@@ -8,10 +8,10 @@ namespace SweetEditor.Build
 {
     public class UBuildEditorWindow : EditorWindow
     {
-        private static GUILayoutOption[] _SettingsButtonLayoutOptions = new [] {
+        private static GUILayoutOption[] _SettingsButtonLayoutOptions = new[] {
             GUILayout.Width(90)
         };
-        private static GUILayoutOption[] _SelectButtonLayoutOptions = new [] {
+        private static GUILayoutOption[] _SelectButtonLayoutOptions = new[] {
             GUILayout.Width(20)
         };
         /// <summary>
@@ -141,7 +141,7 @@ namespace SweetEditor.Build
         }
 
         [MenuItem("Window/uBuild")]
-        public static void ShowWindow() 
+        public static void ShowWindow()
         {
             EditorWindow.GetWindow<UBuildEditorWindow>("uBuild", true);
         }

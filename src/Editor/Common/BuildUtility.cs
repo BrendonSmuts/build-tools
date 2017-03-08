@@ -47,7 +47,8 @@ namespace SweetEditor.Build
 
         [UsedImplicitly]
         private static void RunAssetBundleBuildSettingsCmdLine()
-        {string[] args = Environment.CommandLine.Split(' ');
+        {
+            string[] args = Environment.CommandLine.Split(' ');
 
             int buildSettingsIndex = Array.IndexOf(args, "-buildSettings");
             if (buildSettingsIndex == -1)
@@ -58,8 +59,8 @@ namespace SweetEditor.Build
 
             RunPlayerBuildSettings(args[buildSettingsIndex + 1]);
         }
-        
-        
+
+
         public static void RunPlayerBuildSettingsPreExport(string id)
         {
             var settingsCache = new Dictionary<string, object>();
@@ -73,7 +74,7 @@ namespace SweetEditor.Build
         {
             FindBuildSettings<PlayerBuildSettings>(id).PostProcessBuild(playerPath);
         }
-        
+
 
         public static void RunPlayerBuildSettings(string id)
         {

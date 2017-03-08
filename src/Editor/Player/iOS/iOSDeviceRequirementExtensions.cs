@@ -4,13 +4,13 @@ using UnityEditor;
 
 namespace SweetEditor.Build
 {
-	public static class iOSDeviceRequirementExtensions
-	{
+    public static class iOSDeviceRequirementExtensions
+    {
 
-		public static iOSDeviceRequirement SetIdiomRequirement(this iOSDeviceRequirement requirement, IdiomDeviceRequirement value)
-		{
-			throw new NotImplementedException();
-			/*string val = string.Empty;
+        public static iOSDeviceRequirement SetIdiomRequirement(this iOSDeviceRequirement requirement, IdiomDeviceRequirement value)
+        {
+            throw new NotImplementedException();
+            /*string val = string.Empty;
 
 			switch (value)
 			{
@@ -30,13 +30,13 @@ namespace SweetEditor.Build
 
 			requirement.values["idiom"] = val; 
 			return requirement;*/
-		}
+        }
 
 
-		public static IdiomDeviceRequirement GetIdiomRequirement(this iOSDeviceRequirement requirement)
-		{
-			throw new NotImplementedException();
-			/*string value;
+        public static IdiomDeviceRequirement GetIdiomRequirement(this iOSDeviceRequirement requirement)
+        {
+            throw new NotImplementedException();
+            /*string value;
 			requirement.values.TryGetValue("idiom", out value);
 
 			switch (value)
@@ -50,13 +50,13 @@ namespace SweetEditor.Build
 			}
 
 			return IdiomDeviceRequirement.Any;*/
-		}
+        }
 
 
-		public static iOSDeviceRequirement SetScaleRequirement(this iOSDeviceRequirement requirement, ScaleDeviceRequirement value)
-		{
-			throw new NotImplementedException();
-			/*string val = string.Empty;
+        public static iOSDeviceRequirement SetScaleRequirement(this iOSDeviceRequirement requirement, ScaleDeviceRequirement value)
+        {
+            throw new NotImplementedException();
+            /*string val = string.Empty;
 
 			switch (value)
 			{
@@ -73,13 +73,13 @@ namespace SweetEditor.Build
 
 			requirement.values["graphics-scale-set"] = val;
 			return requirement;*/
-		}
+        }
 
 
-		public static ScaleDeviceRequirement GetScaleRequirement(this iOSDeviceRequirement requirement)
-		{
-			throw new NotImplementedException();
-			/*string value;
+        public static ScaleDeviceRequirement GetScaleRequirement(this iOSDeviceRequirement requirement)
+        {
+            throw new NotImplementedException();
+            /*string value;
 			requirement.values.TryGetValue("graphics-scale-set", out value);
 
 			switch (value)
@@ -93,13 +93,13 @@ namespace SweetEditor.Build
 			}
 
 			return ScaleDeviceRequirement.Any;*/
-		}
+        }
 
 
-		public static iOSDeviceRequirement SetGraphicsRequirement(this iOSDeviceRequirement requirement, GraphicsDeviceRequirement value)
-		{
-			throw new NotImplementedException();
-			/*string value;
+        public static iOSDeviceRequirement SetGraphicsRequirement(this iOSDeviceRequirement requirement, GraphicsDeviceRequirement value)
+        {
+            throw new NotImplementedException();
+            /*string value;
 			requirement.values.TryGetValue("graphics-scale-set", out value);
 
 			switch (value)
@@ -113,13 +113,13 @@ namespace SweetEditor.Build
 			}
 
 			return ScaleDeviceRequirement.Any;*/
-		}
+        }
 
 
-		public static GraphicsDeviceRequirement GetGraphicsRequirement(this iOSDeviceRequirement requirement)
-		{
-			throw new NotImplementedException();
-			/*string value;
+        public static GraphicsDeviceRequirement GetGraphicsRequirement(this iOSDeviceRequirement requirement)
+        {
+            throw new NotImplementedException();
+            /*string value;
 			requirement.values.TryGetValue("graphics-scale-set", out value);
 
 			switch (value)
@@ -133,6 +133,6 @@ namespace SweetEditor.Build
 			}
 
 			return ScaleDeviceRequirement.Any;*/
-		}
-	}
+        }
+    }
 }

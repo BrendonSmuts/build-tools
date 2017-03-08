@@ -8,7 +8,8 @@ namespace SweetEditor.Build
     public class StandalonePlayerBuildSettings : PlayerBuildSettings
     {
         [Header("PC, Mac & Linux Standalone")]
-        [SerializeField] private StandalonePlatform m_TargetPlatform = default(StandalonePlatform);
+        [SerializeField]
+        private StandalonePlatform m_TargetPlatform = default(StandalonePlatform);
         [SerializeField] private StandaloneArchitecture m_Architecture = default(StandaloneArchitecture);
 
 
