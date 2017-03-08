@@ -205,7 +205,6 @@ namespace SweetEditor.Build
 		{
 			Run();
 
-			List<AssetBundleBuild> builds = GetOutputList();
 			string outputPath = Application.dataPath + "/" + path;
 
 		    if (!outputPath.EndsWith("/"))
@@ -216,6 +215,13 @@ namespace SweetEditor.Build
 		    if (Directory.Exists(outputPath))
 			{
 				Directory.Delete(outputPath, true);
+			}
+			
+			List<AssetBundleBuild> builds = GetOutputList();
+
+			if (builds.Count == 0)
+			{
+				return;
 			}
 
 		    for (int i = 0; i < builds.Count; i++)
