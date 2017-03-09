@@ -91,7 +91,7 @@ namespace SweetEditor.Build
 
         public void Run(bool deploy)
         {
-            EditorPrefs.SetString(BuildUtility.GetLastSettingsKey<PlayerBuildSettings>(), m_Id);
+            PlayerPrefs.SetString(BuildUtility.GetLastSettingsKey<PlayerBuildSettings>(), m_Id);
             AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
 
             List<string> scenes = new List<string>(m_Scenes.Length);

@@ -41,7 +41,6 @@ namespace SweetEditor.Build
                 m_Defines);
 
             m_PreRunEvent.Invoke();
-
             EditorSceneManager.OpenScene(AssetDatabase.GetAssetPath(m_RunScene));
             EditorApplication.isPlaying = true;
         }

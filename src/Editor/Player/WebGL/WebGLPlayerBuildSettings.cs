@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -25,6 +24,7 @@ namespace SweetEditor.Build
         {
             get { return BuildTarget.WebGL; }
         }
+
 
 
         protected override void Reset()
@@ -64,16 +64,16 @@ namespace SweetEditor.Build
             PlayerSettings.WebGL.exceptionSupport = m_ExceptionSupport;
             PlayerSettings.WebGL.debugSymbols = m_DebugSymbols;
 #else
-	        settingsCache["memorySize"] = PlayerSettings.GetPropertyInt("memorySize", BuildTargetGroup.WebGL);
-	        settingsCache["dataCaching"] = PlayerSettings.GetPropertyBool("dataCaching", BuildTargetGroup.WebGL);
-	        settingsCache["template"] = PlayerSettings.GetPropertyString("template", BuildTargetGroup.WebGL);
-	        settingsCache["exceptionSupport"] = PlayerSettings.GetPropertyInt("exceptionSupport", BuildTargetGroup.WebGL);
+            settingsCache["memorySize"] = PlayerSettings.GetPropertyInt("memorySize", BuildTargetGroup.WebGL);
+            settingsCache["dataCaching"] = PlayerSettings.GetPropertyBool("dataCaching", BuildTargetGroup.WebGL);
+            settingsCache["template"] = PlayerSettings.GetPropertyString("template", BuildTargetGroup.WebGL);
+            settingsCache["exceptionSupport"] = PlayerSettings.GetPropertyInt("exceptionSupport", BuildTargetGroup.WebGL);
 
-	        PlayerSettings.SetPropertyInt("memorySize", m_MemorySize, BuildTargetGroup.WebGL);
-	        PlayerSettings.SetPropertyBool("dataCaching", m_DataCaching, BuildTargetGroup.WebGL);
-	        PlayerSettings.SetPropertyString("template",
-	            string.IsNullOrEmpty(m_Template) ? "APPLICATION:Default" : m_Template, BuildTargetGroup.WebGL);
-	        PlayerSettings.SetPropertyInt("exceptionSupport", (int)m_ExceptionSupport, BuildTargetGroup.WebGL);
+            PlayerSettings.SetPropertyInt("memorySize", m_MemorySize, BuildTargetGroup.WebGL);
+            PlayerSettings.SetPropertyBool("dataCaching", m_DataCaching, BuildTargetGroup.WebGL);
+            PlayerSettings.SetPropertyString("template",
+                string.IsNullOrEmpty(m_Template) ? "APPLICATION:Default" : m_Template, BuildTargetGroup.WebGL);
+            PlayerSettings.SetPropertyInt("exceptionSupport", (int)m_ExceptionSupport, BuildTargetGroup.WebGL);
 #endif
         }
 

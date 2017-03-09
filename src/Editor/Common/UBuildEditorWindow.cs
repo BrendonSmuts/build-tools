@@ -30,8 +30,8 @@ namespace SweetEditor.Build
         {
             PlayerBuildSettings lastPlayerBuildSettings = BuildUtility.GetLastBuildSettings<PlayerBuildSettings>();
             EditorPlaySettings lastEditorPlaySettings = BuildUtility.GetLastBuildSettings<EditorPlaySettings>();
-            string lastPlayerName = lastPlayerBuildSettings.name;
-            string lastEditorName = lastEditorPlaySettings.name;
+            string lastPlayerName = lastPlayerBuildSettings == null ? string.Empty : lastPlayerBuildSettings.name;
+            string lastEditorName = lastEditorPlaySettings == null ? string.Empty : lastEditorPlaySettings.name;
 
             if (lastPlayerBuildSettings != null)
             {

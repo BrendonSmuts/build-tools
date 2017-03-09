@@ -15,6 +15,17 @@ namespace SweetEditor.Build
 
 
 
+        /// <summary>
+        /// Entry point for running build settings through Unity batch mode.
+        /// </summary> 
+        /// <example>
+        /// path/to/unity.exe \
+        ///     -quit \
+        ///     -batchmode \
+        ///     -nographics \
+        ///     -projectPath '/path/to/project/' \
+        ///     -executeMethod SweetEditor.Build.BuildUtility.RunPlayerBuildSettingsCmdLine -buildSettings standalonewindows
+        /// </example>
         [UsedImplicitly]
         private static void RunPlayerBuildSettingsCmdLine()
         {
@@ -115,7 +126,7 @@ namespace SweetEditor.Build
         public static TBuildSettings GetLastBuildSettings<TBuildSettings>()
             where TBuildSettings : ScriptableObject, IBuildSettings
         {
-            return FindBuildSettings<TBuildSettings>(EditorPrefs.GetString(GetLastSettingsKey<TBuildSettings>(), string.Empty), false);
+            return FindBuildSettings<TBuildSettings>(PlayerPrefs.GetString(GetLastSettingsKey<TBuildSettings>(), string.Empty), false);
         }
 
         public static string GetLastSettingsKey<TBuildSettings>()
