@@ -15,7 +15,7 @@ MonoBehaviour:
   m_ProductName: Sweet.uBuild
   m_Scenes:
   - {fileID: 102900000, guid: 2bf33405533c245b4bdbca082191be3a, type: 3}
-  m_OutputPath: Builds/DEV/StandaloneOSXUniversal/sweet.ubuild_dev-standaloneosxuniversal
+  m_OutputPath: Builds/{platform}/{product}_{id}
   m_IsDevelopment: 1
   m_Defines: 
   m_PreExportEvent:
