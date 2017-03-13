@@ -13,7 +13,7 @@ using Debug = UnityEngine.Debug;
 namespace SweetEditor.Build
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public abstract class PlayerBuildSettings : ScriptableObject, IBuildSettings
     {
@@ -51,8 +51,7 @@ namespace SweetEditor.Build
             m_Scenes = EditorBuildSettings.scenes
                 .Select<EditorBuildSettingsScene, SceneAsset>(s => AssetDatabase.LoadAssetAtPath<SceneAsset>(s.path))
                 .ToArray();
-            m_OutputPath = "Builds/DEV/" + GetPlatformName() + "/" + m_ProductName.ToLower().Replace(' ', '-') + "_" +
-                           m_Id;
+            m_OutputPath = "Builds/DEV/{platform}/{product}_{id}";
             m_IsDevelopment = true;
             m_Defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(GetGroupForBuildTarget(BuildTarget));
         }
@@ -126,7 +125,7 @@ namespace SweetEditor.Build
                 buildOptions |= BuildOptions.AutoRunPlayer;
             }
 
-            string buildPath = PrepareBuildPath(m_OutputPath);
+            string buildPath = PrepareBuildPath(GetOutputPath());
             var settingsCache = new Dictionary<string, object>();
 
             try
@@ -265,6 +264,15 @@ namespace SweetEditor.Build
                 default:
                     throw new ArgumentException(string.Format("No conversion defined for build target {0}", target), "target");
             }
+        }
+
+
+        private string GetOutputPath()
+        {
+            string ret = m_OutputPath.Replace("{id}", m_Id.ToLower());
+            ret = ret.Replace("{product}", m_ProductName.ToLower());
+            ret = ret.Replace("{platform}", GetPlatformName().ToLower());
+            return ret;
         }
 
 

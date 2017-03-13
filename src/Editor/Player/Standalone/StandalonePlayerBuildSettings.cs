@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 
@@ -61,6 +62,33 @@ namespace SweetEditor.Build
         }
 
 
+
+
+        protected override string PrepareBuildPath(string outputPath)
+        {
+            if (m_TargetPlatform == StandalonePlatform.MacOS ||
+                m_TargetPlatform == StandalonePlatform.Linux)
+            {
+                FileInfo fi = new FileInfo(outputPath);
+
+                if (!fi.Directory.Exists)
+                {
+                    fi.Directory.Create();
+                }
+
+                if (fi.Exists)
+                {
+                    fi.Delete();
+                }
+
+                return outputPath;
+            }
+            else
+            {
+                return base.PrepareBuildPath(outputPath);
+            }
+
+        }
 
 
         protected override void Reset()
