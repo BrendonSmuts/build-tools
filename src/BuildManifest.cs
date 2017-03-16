@@ -100,6 +100,15 @@ namespace SweetEngine.Info
         }
 
 
+
+        public string GetShortVersionString()
+        {
+            return string.Format("{0}.{1}.{2}",
+                Major,
+                Minor,
+                Revision);
+        }
+
         public string GetVersionString()
         {
             return string.Format("{0}.{1}.{2}.{3}",

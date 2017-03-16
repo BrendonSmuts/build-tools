@@ -144,7 +144,21 @@ namespace SweetEditor.Build
                     throw new BuildException("Error building player: " + error);
                 }
 
-                PostProcessBuild(buildPath);
+                FileInfo fileInfo = new FileInfo(buildPath);
+                PostProcessBuild(fileInfo.DirectoryName);
+
+                try
+                {
+                    Environment.SetEnvironmentVariable("UBUILD_SHORT_VERSION", manifest.GetShortVersionString(), EnvironmentVariableTarget.User);
+                    Environment.SetEnvironmentVariable("UBUILD_VERSION", manifest.GetVersionString(), EnvironmentVariableTarget.User);
+                    Environment.SetEnvironmentVariable("UBUILD_BUILD", manifest.Build.ToString(), EnvironmentVariableTarget.User);
+                    Environment.SetEnvironmentVariable("UBUILD_OUTPUT_PATH", fileInfo.DirectoryName, EnvironmentVariableTarget.User);
+                    Environment.SetEnvironmentVariable("UBUILD_BUILD_TARGET", BuildTarget.ToString(), EnvironmentVariableTarget.User);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning("WARNING - Failed to set environment variables: " + e);
+                }
             }
             finally
             {
@@ -273,6 +287,8 @@ namespace SweetEditor.Build
             ret = ret.Replace("{product}", m_ProductName.ToLower());
             ret = ret.Replace("{platform}", GetPlatformName().ToLower());
             ret = ret.Replace("{version}", manifest.GetVersionString());
+            ret = ret.Replace("{short_version}", manifest.GetShortVersionString());
+            ret = ret.Replace("{build}", manifest.Build.ToString());
             ret = ret.Replace("{branch}", manifest.ScmBranch);
             ret = ret.Replace("{commit}", manifest.ScmCommitId);
             return ret;
