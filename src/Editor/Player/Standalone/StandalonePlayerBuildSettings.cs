@@ -66,28 +66,27 @@ namespace SweetEditor.Build
 
         protected override string PrepareBuildPath(string outputPath)
         {
-            if (m_TargetPlatform == StandalonePlatform.MacOS ||
-                m_TargetPlatform == StandalonePlatform.Linux)
+            if (m_TargetPlatform == StandalonePlatform.Windows)
             {
-                FileInfo fi = new FileInfo(outputPath);
-
-                if (!fi.Directory.Exists)
+                if (!outputPath.EndsWith(".exe"))
                 {
-                    fi.Directory.Create();
+                    outputPath += ".exe";
                 }
-
-                if (fi.Exists)
-                {
-                    fi.Delete();
-                }
-
-                return outputPath;
             }
-            else
+           
+            FileInfo fi = new FileInfo(outputPath);
+
+            if (!fi.Directory.Exists)
             {
-                return base.PrepareBuildPath(outputPath);
+                fi.Directory.Create();
             }
 
+            if (fi.Exists)
+            {
+                fi.Delete();
+            }
+
+            return outputPath;
         }
 
 

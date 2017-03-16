@@ -48,7 +48,10 @@ namespace SweetEditor.Build
 
         protected override string PrepareBuildPath(string outputPath)
         {
-            outputPath += ".apk";
+            if (!outputPath.EndsWith(".apk"))
+            {
+                outputPath += ".apk";
+            }
 
             FileInfo fi = new FileInfo(outputPath);
 
