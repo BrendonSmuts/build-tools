@@ -125,7 +125,6 @@ namespace SweetEditor.Build
                 buildOptions |= BuildOptions.AutoRunPlayer;
             }
 
-            string buildPath = PrepareBuildPath(GetOutputPath());
             var settingsCache = new Dictionary<string, object>();
 
             try
@@ -134,6 +133,7 @@ namespace SweetEditor.Build
                 PreProcessBuild();
 
                 BuildManifest manifest = CreateOrUpdateBuildManifest();
+                string buildPath = PrepareBuildPath(GetOutputPath(manifest));
                 PushManifestPlayerSettings(settingsCache, manifest);
 
                 string error = BuildPipeline.BuildPlayer(scenes.ToArray(), buildPath, BuildTarget,
@@ -267,11 +267,14 @@ namespace SweetEditor.Build
         }
 
 
-        private string GetOutputPath()
+        private string GetOutputPath(BuildManifest manifest)
         {
             string ret = m_OutputPath.Replace("{id}", m_Id.ToLower());
             ret = ret.Replace("{product}", m_ProductName.ToLower());
             ret = ret.Replace("{platform}", GetPlatformName().ToLower());
+            ret = ret.Replace("{version}", manifest.GetVersionString());
+            ret = ret.Replace("{branch}", manifest.ScmBranch);
+            ret = ret.Replace("{commit}", manifest.ScmCommitId);
             return ret;
         }
 
