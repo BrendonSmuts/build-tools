@@ -174,10 +174,21 @@ namespace SweetEditor.Build
             for (int i = 0; i < m_InfoPlistEntries.Length; i++)
             {
                 InfoPlistEntry entry =  m_InfoPlistEntries[i];
-                root.SetString(entry.Key, entry.Value);
+
+                switch (entry.Type)
+                {
+                    case PlistEntryType.Boolean:
+                        root.SetBoolean(entry.Key, entry.BooleanValue);
+                    break;
+                    case PlistEntryType.Integer:
+                        root.SetInteger(entry.Key, entry.IntegerValue);         
+                    break;
+                    case PlistEntryType.String:
+                        root.SetString(entry.Key, entry.StringValue);
+                    break;
+                }
             }
 
-            UnityEngine.Debug.Log("Plist: " + plist.WriteToString());
             plist.WriteToFile(plistPath);
         }
 
