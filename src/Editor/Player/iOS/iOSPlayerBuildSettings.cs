@@ -169,13 +169,15 @@ namespace SweetEditor.Build
             string plistPath = playerPath + "/Info.plist";
             PlistDocument plist = new PlistDocument();
             plist.ReadFromFile(plistPath);
+            PlistElementDict root = plist.root;
 
-            for (int i = 0; i > m_InfoPlistEntries.Length; i++)
+            for (int i = 0; i < m_InfoPlistEntries.Length; i++)
             {
                 InfoPlistEntry entry =  m_InfoPlistEntries[i];
-                plist.root.SetString(entry.Key, entry.Value);
+                root.SetString(entry.Key, entry.Value);
             }
 
+            UnityEngine.Debug.Log("Plist: " + plist.WriteToString());
             plist.WriteToFile(plistPath);
         }
 

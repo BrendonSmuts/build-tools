@@ -133,7 +133,8 @@ namespace SweetEditor.Build
                 PreProcessBuild();
 
                 BuildManifest manifest = CreateOrUpdateBuildManifest();
-                string buildPath = PrepareBuildPath(GetOutputPath(manifest));
+                string outputPath = GetOutputPath(manifest);
+                string buildPath = PrepareBuildPath(outputPath);
                 PushManifestPlayerSettings(settingsCache, manifest);
 
                 string error = BuildPipeline.BuildPlayer(scenes.ToArray(), buildPath, BuildTarget,
@@ -144,15 +145,14 @@ namespace SweetEditor.Build
                     throw new BuildException("Error building player: " + error);
                 }
 
-                FileInfo fileInfo = new FileInfo(buildPath);
-                PostProcessBuild(fileInfo.DirectoryName);
+                PostProcessBuild(outputPath);
 
                 try
                 {
                     Environment.SetEnvironmentVariable("UBUILD_SHORT_VERSION", manifest.GetShortVersionString(), EnvironmentVariableTarget.User);
                     Environment.SetEnvironmentVariable("UBUILD_VERSION", manifest.GetVersionString(), EnvironmentVariableTarget.User);
                     Environment.SetEnvironmentVariable("UBUILD_BUILD", manifest.Build.ToString(), EnvironmentVariableTarget.User);
-                    Environment.SetEnvironmentVariable("UBUILD_OUTPUT_PATH", fileInfo.DirectoryName, EnvironmentVariableTarget.User);
+                    Environment.SetEnvironmentVariable("UBUILD_OUTPUT_PATH", buildPath, EnvironmentVariableTarget.User);
                     Environment.SetEnvironmentVariable("UBUILD_BUILD_TARGET", BuildTarget.ToString(), EnvironmentVariableTarget.User);
                 }
                 catch (Exception e)
