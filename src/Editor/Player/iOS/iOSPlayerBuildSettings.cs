@@ -32,6 +32,7 @@ namespace SweetEditor.Build
         [SerializeField] private string m_AppleDeveloperTeamId = default(string);
         [SerializeField] private string[] m_Frameworks = default(string[]);
         [SerializeField] private FileInfo[] m_Files = default(FileInfo[]);
+        [SerializeField] private InfoPlistEntry[] m_InfoPlistEntries = default(InfoPlistEntry[]);
 
 
 
@@ -134,7 +135,7 @@ namespace SweetEditor.Build
             string projPath = playerPath + "/Unity-iPhone.xcodeproj/project.pbxproj";
 
             PBXProject proj = new PBXProject();
-            proj.ReadFromString(File.ReadAllText(projPath));
+            proj.ReadFromFile(projPath);
 
             string target = proj.TargetGuidByName("Unity-iPhone");
 
@@ -152,7 +153,19 @@ namespace SweetEditor.Build
                 proj.AddFileToBuild(target, proj.AddFile("usr/lib/" + s.Name, "Frameworks/" + s.Name, (PBXSourceTree)s.SourceTree));
             }
 
-            File.WriteAllText(projPath, proj.WriteToString());
+            proj.WriteToFile(projPath);
+
+            string plistPath = playerPath + "/Info.plist";
+            PlistDocument plist = new PlistDocument();
+            plist.ReadFromFile(plistPath);
+
+            for (int i = 0; i > m_InfoPlistEntries.Length; i++)
+            {
+                InfoPlistEntry entry =  m_InfoPlistEntries[i];
+                plist.root.SetString(entry.Key, entry.Value);
+            }
+
+            plist.WriteToFile(plistPath);
         }
 
 
