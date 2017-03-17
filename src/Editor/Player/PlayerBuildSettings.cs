@@ -152,7 +152,7 @@ namespace SweetEditor.Build
                     Environment.SetEnvironmentVariable("UBUILD_SHORT_VERSION", manifest.GetShortVersionString(), EnvironmentVariableTarget.User);
                     Environment.SetEnvironmentVariable("UBUILD_VERSION", manifest.GetVersionString(), EnvironmentVariableTarget.User);
                     Environment.SetEnvironmentVariable("UBUILD_BUILD", manifest.Build.ToString(), EnvironmentVariableTarget.User);
-                    Environment.SetEnvironmentVariable("UBUILD_OUTPUT_PATH", buildPath, EnvironmentVariableTarget.User);
+                    Environment.SetEnvironmentVariable("UBUILD_OUTPUT_PATH", outputPath, EnvironmentVariableTarget.User);
                     Environment.SetEnvironmentVariable("UBUILD_BUILD_TARGET", BuildTarget.ToString(), EnvironmentVariableTarget.User);
                 }
                 catch (Exception e)
