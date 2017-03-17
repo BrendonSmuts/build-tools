@@ -1,7 +1,9 @@
 ﻿#if UNITY_5_5_OR_NEWER || UNITY_5_4_4
-#define AUTOMATIC_SIGNING
+#define HAS_TEAM_ID
+#if !UNITY_5_5_0
+#define HAS_AUTOMATIC_SIGNING
 #endif
-
+#endif
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -52,14 +54,17 @@ namespace SweetEditor.Build
             m_BundleIdentifier = PlayerSettings.bundleIdentifier;
             m_ScriptCallOptimization = PlayerSettings.iOS.scriptCallOptimization;
 
-#if AUTOMATIC_SIGNING
+#if HAS_TEAM_ID
             m_AppleDeveloperTeamId = PlayerSettings.iOS.appleDeveloperTeamID;
-            m_AutomaticSign = PlayerSettings.iOS.appleEnableAutomaticSigning;
 
             if (string.IsNullOrEmpty(m_AppleDeveloperTeamId))
             {
                 m_AppleDeveloperTeamId = EditorPrefs.GetString(_DefaultiOSAutomaticSignTeamId);
             }
+
+#if HAS_AUTOMATIC_SIGNING
+            m_AutomaticSign = PlayerSettings.iOS.appleEnableAutomaticSigning;
+#endif
 #endif
 
             m_EnableOnDemandResources = PlayerSettings.iOS.useOnDemandResources;
@@ -76,18 +81,22 @@ namespace SweetEditor.Build
 
             settingsCache["scriptCallOptimization"] = PlayerSettings.iOS.scriptCallOptimization;
             settingsCache["useOnDemandResources"] = PlayerSettings.iOS.useOnDemandResources;
-#if AUTOMATIC_SIGNING
+#if HAS_TEAM_ID
             settingsCache["appleDeveloperTeamID"] = PlayerSettings.iOS.appleDeveloperTeamID;
+#if HAS_AUTOMATIC_SIGNING
             settingsCache["appleEnableAutomaticSigning"] = PlayerSettings.iOS.appleEnableAutomaticSigning;
+#endif
 #endif
 
             bool useOnDemandResources = m_EnableOnDemandResources || m_EnableAppSlicing;
 
             PlayerSettings.iOS.scriptCallOptimization = m_ScriptCallOptimization;
             PlayerSettings.iOS.useOnDemandResources = useOnDemandResources;
-#if UNITY_5_5_OR_NEWER || UNITY_5_4_4
+#if HAS_TEAM_ID
             PlayerSettings.iOS.appleDeveloperTeamID = m_AppleDeveloperTeamId;
+#if HAS_AUTOMATIC_SIGNING
             PlayerSettings.iOS.appleEnableAutomaticSigning = m_AutomaticSign;
+#endif
 #endif
 
             if (useOnDemandResources)
@@ -113,9 +122,11 @@ namespace SweetEditor.Build
 #endif
             TrySetValue<ScriptCallOptimizationLevel>((v) => PlayerSettings.iOS.scriptCallOptimization = v, "scriptCallOptimization", settingsCache);
             TrySetValue<bool>((v) => PlayerSettings.iOS.useOnDemandResources = v, "useOnDemandResources", settingsCache);
-#if AUTOMATIC_SIGNING
+#if HAS_TEAM_ID
             TrySetValue<string>((v) => PlayerSettings.iOS.appleDeveloperTeamID = v, "appleDeveloperTeamID", settingsCache);
+#if HAS_AUTOMATIC_SIGNING
             TrySetValue<bool>((v) => PlayerSettings.iOS.appleEnableAutomaticSigning = v, "appleEnableAutomaticSigning", settingsCache);
+#endif
 #endif
 
             bool useOnDemandResources = m_EnableOnDemandResources || m_EnableAppSlicing;
