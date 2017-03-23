@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -133,7 +133,8 @@ namespace SweetEditor.Build
                 PreProcessBuild();
 
                 BuildManifest manifest = CreateOrUpdateBuildManifest();
-                string buildPath = PrepareBuildPath(GetOutputPath(manifest));
+                string outputPath = GetOutputPath(manifest);
+                string buildPath = PrepareBuildPath(outputPath);
                 PushManifestPlayerSettings(settingsCache, manifest);
 
                 FileInfo fileInfo = new FileInfo(buildPath);
@@ -146,7 +147,7 @@ namespace SweetEditor.Build
                     throw new BuildException("Error building player: " + error);
                 }
 
-                PostProcessBuild(fileInfo.DirectoryName);
+                PostProcessBuild(outputPath);
             }
             finally
             {
