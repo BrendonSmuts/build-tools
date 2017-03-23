@@ -136,6 +136,8 @@ namespace SweetEditor.Build
                 string buildPath = PrepareBuildPath(GetOutputPath(manifest));
                 PushManifestPlayerSettings(settingsCache, manifest);
 
+                FileInfo fileInfo = new FileInfo(buildPath);
+
                 string error = BuildPipeline.BuildPlayer(scenes.ToArray(), buildPath, BuildTarget,
                     buildOptions);
 
@@ -144,21 +146,7 @@ namespace SweetEditor.Build
                     throw new BuildException("Error building player: " + error);
                 }
 
-                FileInfo fileInfo = new FileInfo(buildPath);
                 PostProcessBuild(fileInfo.DirectoryName);
-
-                try
-                {
-                    Environment.SetEnvironmentVariable("UBUILD_SHORT_VERSION", manifest.GetShortVersionString(), EnvironmentVariableTarget.User);
-                    Environment.SetEnvironmentVariable("UBUILD_VERSION", manifest.GetVersionString(), EnvironmentVariableTarget.User);
-                    Environment.SetEnvironmentVariable("UBUILD_BUILD", manifest.Build.ToString(), EnvironmentVariableTarget.User);
-                    Environment.SetEnvironmentVariable("UBUILD_OUTPUT_PATH", fileInfo.DirectoryName, EnvironmentVariableTarget.User);
-                    Environment.SetEnvironmentVariable("UBUILD_BUILD_TARGET", BuildTarget.ToString(), EnvironmentVariableTarget.User);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogWarning("WARNING - Failed to set environment variables: " + e);
-                }
             }
             finally
             {
@@ -339,7 +327,7 @@ namespace SweetEditor.Build
             spScmCommitId.stringValue = GetGitCommandOutput("rev-parse HEAD");
             spScmBranch.stringValue = GetGitCommandOutput("rev-parse --abbrev-ref HEAD");
             spBuildTime.stringValue = DateTime.UtcNow.ToString("d MMM yyyy");
-            spBundleId.stringValue = PlayerSettings.bundleIdentifier;
+            spBundleId.stringValue = PlayerSettings.applicationIdentifier;
             spUnityVersion.stringValue = Application.unityVersion;
 
             soManifest.ApplyModifiedPropertiesWithoutUndo();

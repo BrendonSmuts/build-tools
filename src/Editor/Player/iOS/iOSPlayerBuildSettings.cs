@@ -51,7 +51,12 @@ namespace SweetEditor.Build
         {
             base.Reset();
 
+#if UNITY_5_6_OR_NEWER
+            m_BundleIdentifier = PlayerSettings.applicationIdentifier;
+#else
             m_BundleIdentifier = PlayerSettings.bundleIdentifier;
+#endif
+
             m_ScriptCallOptimization = PlayerSettings.iOS.scriptCallOptimization;
 
 #if HAS_TEAM_ID
@@ -73,28 +78,26 @@ namespace SweetEditor.Build
 
         protected override void OnPushPlayerSettings(Dictionary<string, object> settingsCache)
         {
+            bool useOnDemandResources = m_EnableOnDemandResources || m_EnableAppSlicing;
 #if !UNITY_CLOUD
+#if UNITY_5_6_OR_NEWER
+            settingsCache["bundleIdentifier"] = PlayerSettings.applicationIdentifier;
+            PlayerSettings.applicationIdentifier = m_BundleIdentifier;
+#else
             settingsCache["bundleIdentifier"] = PlayerSettings.bundleIdentifier;
-
             PlayerSettings.bundleIdentifier = m_BundleIdentifier;
+#endif
 #endif
 
             settingsCache["scriptCallOptimization"] = PlayerSettings.iOS.scriptCallOptimization;
-            settingsCache["useOnDemandResources"] = PlayerSettings.iOS.useOnDemandResources;
-#if HAS_TEAM_ID
-            settingsCache["appleDeveloperTeamID"] = PlayerSettings.iOS.appleDeveloperTeamID;
-#if HAS_AUTOMATIC_SIGNING
-            settingsCache["appleEnableAutomaticSigning"] = PlayerSettings.iOS.appleEnableAutomaticSigning;
-#endif
-#endif
-
-            bool useOnDemandResources = m_EnableOnDemandResources || m_EnableAppSlicing;
-
             PlayerSettings.iOS.scriptCallOptimization = m_ScriptCallOptimization;
+            settingsCache["useOnDemandResources"] = PlayerSettings.iOS.useOnDemandResources;
             PlayerSettings.iOS.useOnDemandResources = useOnDemandResources;
 #if HAS_TEAM_ID
+            settingsCache["appleDeveloperTeamID"] = PlayerSettings.iOS.appleDeveloperTeamID;
             PlayerSettings.iOS.appleDeveloperTeamID = m_AppleDeveloperTeamId;
 #if HAS_AUTOMATIC_SIGNING
+            settingsCache["appleEnableAutomaticSigning"] = PlayerSettings.iOS.appleEnableAutomaticSigning;
             PlayerSettings.iOS.appleEnableAutomaticSigning = m_AutomaticSign;
 #endif
 #endif
@@ -118,7 +121,11 @@ namespace SweetEditor.Build
         protected override void OnPopPlayerSettings(Dictionary<string, object> settingsCache)
         {
 #if !UNITY_CLOUD
+#if UNITY_5_6_OR_NEWER
+            TrySetValue<string>((v) => PlayerSettings.applicationIdentifier = v, "bundleIdentifier", settingsCache);
+#else
             TrySetValue<string>((v) => PlayerSettings.bundleIdentifier = v, "bundleIdentifier", settingsCache);
+#endif
 #endif
             TrySetValue<ScriptCallOptimizationLevel>((v) => PlayerSettings.iOS.scriptCallOptimization = v, "scriptCallOptimization", settingsCache);
             TrySetValue<bool>((v) => PlayerSettings.iOS.useOnDemandResources = v, "useOnDemandResources", settingsCache);

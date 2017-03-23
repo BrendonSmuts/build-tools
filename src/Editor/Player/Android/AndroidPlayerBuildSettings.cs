@@ -37,7 +37,12 @@ namespace SweetEditor.Build
         {
             base.Reset();
 
+#if UNITY_5_6_OR_NEWER
+            m_BundleIdentifier = PlayerSettings.applicationIdentifier;
+#else
             m_BundleIdentifier = PlayerSettings.bundleIdentifier;
+#endif
+
             m_Keystore = PlayerSettings.Android.keystoreName;
             m_KeystorePassword = PlayerSettings.Android.keystorePass;
             m_KeyAlias = PlayerSettings.Android.keyaliasName;
@@ -72,18 +77,26 @@ namespace SweetEditor.Build
         protected override void OnPushPlayerSettings(Dictionary<string, object> settingsCache)
         {
 #if !UNITY_CLOUD
+#if UNITY_5_6_OR_NEWER
+            settingsCache["bundleIdentifier"] = PlayerSettings.applicationIdentifier;
+            PlayerSettings.applicationIdentifier = m_BundleIdentifier;
+#else
             settingsCache["bundleIdentifier"] = PlayerSettings.bundleIdentifier;
-            settingsCache["keystoreName"] = PlayerSettings.Android.keystoreName;
-            settingsCache["keystorePass"] = PlayerSettings.Android.keystorePass;
-            settingsCache["keyaliasName"] = PlayerSettings.Android.keyaliasName;
-            settingsCache["keyaliasPass"] = PlayerSettings.Android.keyaliasPass;
-            settingsCache["useAPKExpansionFiles"] = PlayerSettings.Android.useAPKExpansionFiles;
-
             PlayerSettings.bundleIdentifier = m_BundleIdentifier;
+#endif
+            settingsCache["keystoreName"] = PlayerSettings.Android.keystoreName;
             PlayerSettings.Android.keystoreName = m_Keystore;
+
+            settingsCache["keystorePass"] = PlayerSettings.Android.keystorePass;
             PlayerSettings.Android.keystorePass = m_KeystorePassword;
+
+            settingsCache["keyaliasName"] = PlayerSettings.Android.keyaliasName;
             PlayerSettings.Android.keyaliasName = m_KeyAlias;
+
+            settingsCache["keyaliasPass"] = PlayerSettings.Android.keyaliasPass;
             PlayerSettings.Android.keyaliasPass = m_KeyAliasPassword;
+
+            settingsCache["useAPKExpansionFiles"] = PlayerSettings.Android.useAPKExpansionFiles;
             PlayerSettings.Android.useAPKExpansionFiles = m_SplitApplicationBinary;
 #endif
 
@@ -104,7 +117,12 @@ namespace SweetEditor.Build
         protected override void OnPopPlayerSettings(Dictionary<string, object> settingsCache)
         {
 #if !UNITY_CLOUD
+#if UNITY_5_6_OR_NEWER
+            TrySetValue<string>((v) => PlayerSettings.applicationIdentifier = v, "bundleIdentifier", settingsCache);
+#else
             TrySetValue<string>((v) => PlayerSettings.bundleIdentifier = v, "bundleIdentifier", settingsCache);
+#endif
+            TrySetValue<string>((v) => PlayerSettings.applicationIdentifier = v, "bundleIdentifier", settingsCache);
             TrySetValue<string>((v) => PlayerSettings.Android.keystoreName = v, "keystoreName", settingsCache);
             TrySetValue<string>((v) => PlayerSettings.Android.keystorePass = v, "keystorePass", settingsCache);
             TrySetValue<string>((v) => PlayerSettings.Android.keyaliasName = v, "keyaliasName", settingsCache);
