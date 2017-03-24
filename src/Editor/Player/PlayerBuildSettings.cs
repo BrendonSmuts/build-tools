@@ -41,6 +41,10 @@ namespace SweetEditor.Build
             get { return m_Id; }
         }
 
+        public string ProductName 
+        { 
+            get { return m_ProductName; } 
+        }
 
 
 
@@ -270,7 +274,7 @@ namespace SweetEditor.Build
         }
 
 
-        private string GetOutputPath(BuildManifest manifest)
+        public string GetOutputPath(BuildManifest manifest)
         {
             string ret = m_OutputPath.Replace("{id}", m_Id.ToLower());
             ret = ret.Replace("{product}", m_ProductName.ToLower());
