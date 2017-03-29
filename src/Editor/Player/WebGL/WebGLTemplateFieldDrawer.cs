@@ -55,7 +55,7 @@ namespace SweetEditor.Build
         private static string GetStandardTemplatesFolder()
         {
 #if UNITY_EDITOR_WIN
-            return EditorApplication.applicationPath + "Editor/Data/PlaybackEngines/WebGLSupport/BuildTools/WebGLTemplates"
+            return EditorApplication.applicationContentsPath + "/PlaybackEngines/WebGLSupport/BuildTools/WebGLTemplates";
 #elif UNITY_EDITOR_OSX
             return EditorApplication.applicationPath + "/../PlaybackEngines/WebGLSupport/BuildTools/WebGLTemplates";
 #endif
