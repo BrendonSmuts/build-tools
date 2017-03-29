@@ -54,8 +54,9 @@ namespace SweetEditor.Build
             m_ProductName = PlayerSettings.productName;
             m_Scenes = EditorBuildSettings.scenes
                 .Select<EditorBuildSettingsScene, SceneAsset>(s => AssetDatabase.LoadAssetAtPath<SceneAsset>(s.path))
+                .Where(s => s != null)
                 .ToArray();
-            m_OutputPath = "Builds/DEV/{platform}/{product}_{id}";
+            m_OutputPath = "Builds/{id}/{product}_{id}";
             m_IsDevelopment = true;
             m_Defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(GetGroupForBuildTarget(BuildTarget));
         }

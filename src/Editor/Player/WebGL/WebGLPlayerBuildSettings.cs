@@ -10,7 +10,7 @@ namespace SweetEditor.Build
     {
         [Header("WebGL"), SerializeField] private int m_MemorySize = default(int);
         [SerializeField] private bool m_DataCaching = default(bool);
-        [SerializeField] private string m_Template = "APPLICATION:Default";
+        [SerializeField, WebGLTemplateField] private string m_Template = "APPLICATION:Default";
         [SerializeField] private WebGLExceptionSupport m_ExceptionSupport = default(WebGLExceptionSupport);
 #if UNITY_5_5_OR_NEWER
         [SerializeField] private WebGLCompressionFormat m_CompressionFormat = default(WebGLCompressionFormat);
@@ -95,6 +95,7 @@ namespace SweetEditor.Build
 #endif
         }
     }
+
 
 #if !UNITY_5_5_OR_NEWER
     public enum WebGLExceptionSupport
