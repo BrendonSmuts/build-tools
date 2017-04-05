@@ -88,11 +88,13 @@ namespace SweetEditor.Build
                     if (GUILayout.Button("Build", _SettingsButtonLayoutOptions))
                     {
                         setting.Run();
+                        return;
                     }
 
                     if (GUILayout.Button("Build and Run", _SettingsButtonLayoutOptions))
                     {
                         setting.RunAndDeploy();
+                        return;
                     }
 
                     if (GUILayout.Button("?", _SelectButtonLayoutOptions))
@@ -128,6 +130,7 @@ namespace SweetEditor.Build
                     if (GUILayout.Button("Play", _SettingsButtonLayoutOptions))
                     {
                         setting.Run();
+                        return;
                     }
 
                     if (GUILayout.Button("?", _SelectButtonLayoutOptions))

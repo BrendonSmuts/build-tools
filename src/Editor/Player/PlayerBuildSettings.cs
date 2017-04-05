@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using SweetEngine.Info;
+using SweetEngine.Build;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;

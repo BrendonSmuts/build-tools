@@ -251,7 +251,7 @@ namespace SweetEditor.Build
             }
 
             string manfiestFileName = GetManifestFileName();
-            File.Copy(GetBundlePath(manfiestFileName), outputPath, true);
+            File.Copy(GetBundlePath(manfiestFileName), outputPath + manfiestFileName, true);
             AssetDatabase.Refresh();
         }
 

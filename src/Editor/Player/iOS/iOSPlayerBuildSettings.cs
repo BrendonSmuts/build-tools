@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using SweetEngine.Info;
+using SweetEngine.Build;
 using UnityEditor;
 using UnityEditor.iOS;
 using UnityEditor.iOS.Xcode;

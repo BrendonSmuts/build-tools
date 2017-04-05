@@ -2,7 +2,7 @@ using System.Text;
 using UnityEngine;
 
 
-namespace SweetEngine.Info
+namespace SweetEngine.Build
 {
     public class BuildManifest : ScriptableObject
     {
