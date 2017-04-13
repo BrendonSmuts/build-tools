@@ -52,7 +52,7 @@ namespace SweetEditor.Build
             base.Reset();
 
 #if UNITY_5_6_OR_NEWER
-            m_BundleIdentifier = PlayerSettings.applicationIdentifier;
+            m_BundleIdentifier = PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.iOS);
 #else
             m_BundleIdentifier = PlayerSettings.bundleIdentifier;
 #endif
@@ -81,8 +81,8 @@ namespace SweetEditor.Build
             bool useOnDemandResources = m_EnableOnDemandResources || m_EnableAppSlicing;
 #if !UNITY_CLOUD
 #if UNITY_5_6_OR_NEWER
-            settingsCache["bundleIdentifier"] = PlayerSettings.applicationIdentifier;
-            PlayerSettings.applicationIdentifier = m_BundleIdentifier;
+            settingsCache["bundleIdentifier"] = PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.iOS);
+            PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.iOS, m_BundleIdentifier);
 #else
             settingsCache["bundleIdentifier"] = PlayerSettings.bundleIdentifier;
             PlayerSettings.bundleIdentifier = m_BundleIdentifier;
@@ -122,7 +122,7 @@ namespace SweetEditor.Build
         {
 #if !UNITY_CLOUD
 #if UNITY_5_6_OR_NEWER
-            TrySetValue<string>((v) => PlayerSettings.applicationIdentifier = v, "bundleIdentifier", settingsCache);
+            TrySetValue<string>((v) => PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.iOS, v), "bundleIdentifier", settingsCache);
 #else
             TrySetValue<string>((v) => PlayerSettings.bundleIdentifier = v, "bundleIdentifier", settingsCache);
 #endif
