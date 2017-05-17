@@ -142,8 +142,6 @@ namespace SweetEditor.Build
                 string buildPath = PrepareBuildPath(outputPath);
                 PushManifestPlayerSettings(settingsCache, manifest);
 
-                FileInfo fileInfo = new FileInfo(buildPath);
-
                 string error = BuildPipeline.BuildPlayer(scenes.ToArray(), buildPath, BuildTarget,
                     buildOptions);
 

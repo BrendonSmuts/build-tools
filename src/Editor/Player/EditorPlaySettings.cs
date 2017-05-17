@@ -10,7 +10,6 @@ namespace SweetEditor.Build
     [CreateAssetMenu(menuName = "Build Settings/Editor Play", order = 10)]
     public class EditorPlaySettings : ScriptableObject, IBuildSettings
     {
-        private static readonly string _LastPlayKey = "lastPlaySettings";
         [SerializeField] private string m_Id = default(string);
         [SerializeField] private SceneAsset m_RunScene = default(SceneAsset);
         [SerializeField] private string m_Defines = default(string);
