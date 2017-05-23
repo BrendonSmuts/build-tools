@@ -68,13 +68,12 @@ namespace SweetEditor.Build
         }
 
 
-        [ContextMenu("Build")]
         public void Run()
         {
             Run(false);
         }
 
-        [ContextMenu("Build and Run")]
+
         public void RunAndDeploy()
         {
             Run(true);

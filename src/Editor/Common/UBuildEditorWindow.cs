@@ -8,17 +8,31 @@ namespace SweetEditor.Build
 {
     public class UBuildEditorWindow : EditorWindow
     {
+        private GUIStyle _guiStyleHeading = GUIStyle.none;
+        private GUIStyle _guiStyleSettingsA = GUIStyle.none;
+        private GUIStyle _guiStyleSettingsB = GUIStyle.none;
         private static GUILayoutOption[] _SettingsButtonLayoutOptions = new[] {
             GUILayout.Width(90)
         };
         private static GUILayoutOption[] _SelectButtonLayoutOptions = new[] {
             GUILayout.Width(20)
         };
+
+
+
+
         /// <summary>
         /// This function is called when the object becomes enabled and active.
         /// </summary>
         void OnEnable()
         {
+            GUIStyleState headingNormalStyle = new GUIStyleState();
+            headingNormalStyle.textColor = Color.white;
+
+            _guiStyleHeading.fontSize = 15;
+            _guiStyleHeading.alignment = TextAnchor.MiddleCenter;
+            _guiStyleHeading.margin = new RectOffset(0,0, 5, 5);
+            _guiStyleHeading.normal = headingNormalStyle;
         }
 
 
@@ -35,13 +49,13 @@ namespace SweetEditor.Build
 
             if (lastPlayerBuildSettings != null)
             {
-                if (GUILayout.Button("Build - " + lastPlayerName))
+                if (GUILayout.Button("Build: " + lastPlayerName))
                 {
                     lastPlayerBuildSettings.Run();
                     return;
                 }
 
-                if (GUILayout.Button("Build and Run - " + lastPlayerName))
+                if (GUILayout.Button("Build and Run: " + lastPlayerName))
                 {
                     lastPlayerBuildSettings.RunAndDeploy();
                     return;
@@ -54,7 +68,7 @@ namespace SweetEditor.Build
 
             if (lastEditorPlaySettings != null)
             {
-                if (GUILayout.Button("Play - " + lastEditorName))
+                if (GUILayout.Button("Play: " + lastEditorName))
                 {
                     lastEditorPlaySettings.Run();
                     return;
@@ -76,15 +90,15 @@ namespace SweetEditor.Build
             }
             else
             {
-                GUILayout.Label("Players");
+                GUILayout.Label("Players", _guiStyleHeading);
 
                 for (int i = 0; i < playerBuildSettings.Length; i++)
                 {
                     PlayerBuildSettings setting = playerBuildSettings[i];
 
                     GUILayout.BeginHorizontal();
-
                     GUILayout.Label(setting.name);
+
                     if (GUILayout.Button("Build", _SettingsButtonLayoutOptions))
                     {
                         setting.Run();
@@ -118,7 +132,7 @@ namespace SweetEditor.Build
             }
             else
             {
-                GUILayout.Label("Editor Play");
+                GUILayout.Label("Editor Play", _guiStyleHeading);
 
                 for (int i = 0; i < editorPlaySettings.Length; i++)
                 {
