@@ -15,12 +15,14 @@ namespace SweetEditor.Build
             if (GUILayout.Button("Build"))
             {
                 ((PlayerBuildSettings)target).Run();
+                return;
             }
 
 
             if (GUILayout.Button("Build and Run"))
             {
                 ((PlayerBuildSettings)target).RunAndDeploy();
+                return;
             }
         }
     }
