@@ -55,21 +55,19 @@ namespace SweetEditor.Build
 #if UNITY_5_5_OR_NEWER
                 case RuntimePlatform.LinuxEditor:
                     m_BuildTarget = BuildTarget.StandaloneLinuxUniversal;
-                    m_OutputPath = "AssetBundles/Linux";
                     break;
 #endif
                 case RuntimePlatform.OSXEditor:
                     m_BuildTarget = BuildTarget.StandaloneOSXUniversal;
-                    m_OutputPath = "AssetBundles/OSX";
                     break;
                 default:
                     m_BuildTarget = BuildTarget.StandaloneWindows;
-                    m_OutputPath = "AssetBundles/Windows";
                     break;
             }
 
+            m_OutputPath = "AssetBundles/" + m_BuildTarget.ToString();
             m_Id = m_BuildTarget.ToString().ToLower();
-            m_OutputExclusionFilters = new string[0];
+            m_OutputExclusionFilters = new [] { "source" };
             m_StrictMode = true;
             m_BuildInclusionFilters = new[] { "*" };
             m_CompressionMode = new LZ4CompressionMode().Name;
@@ -85,6 +83,8 @@ namespace SweetEditor.Build
         public void Run()
         {
             string buildSettingsName = name;
+            string assetPath = AssetDatabase.GetAssetPath(this);
+            
             m_PreBuildEvent.Invoke();
 
             AssetDatabase.Refresh();
@@ -195,8 +195,7 @@ namespace SweetEditor.Build
                 Debug.Log(sb.ToString(), this);
             }
 
-
-            Build.CompressionMode.GetCompressionMode(m_CompressionMode).CompressBundles(this, manifest);
+            Build.CompressionMode.GetCompressionMode(m_CompressionMode).CompressBundles(AssetDatabase.LoadAssetAtPath<AssetBundleBuildSettings>(assetPath), manifest);
 
             m_PostBuildEvent.Invoke(manifest);
         }

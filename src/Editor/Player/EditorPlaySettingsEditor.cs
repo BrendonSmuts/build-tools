@@ -15,6 +15,7 @@ namespace SweetEditor.Build
             if (GUILayout.Button("Play"))
             {
                 ((EditorPlaySettings)target).Run();
+                return;
             }
         }
     }
