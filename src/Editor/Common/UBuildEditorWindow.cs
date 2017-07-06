@@ -9,8 +9,6 @@ namespace SweetEditor.Build
     public class UBuildEditorWindow : EditorWindow
     {
         private GUIStyle _guiStyleHeading = GUIStyle.none;
-        private GUIStyle _guiStyleSettingsA = GUIStyle.none;
-        private GUIStyle _guiStyleSettingsB = GUIStyle.none;
         private static GUILayoutOption[] _SettingsButtonLayoutOptions = new[] {
             GUILayout.Width(90)
         };
