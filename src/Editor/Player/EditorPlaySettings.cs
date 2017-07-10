@@ -36,6 +36,8 @@ namespace SweetEditor.Build
                 return;
             }
 
+            EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
+            
             PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup,
                 m_Defines);
             
