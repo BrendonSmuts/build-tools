@@ -41,9 +41,9 @@ namespace SweetEditor.Build
             get { return m_Id; }
         }
 
-        public string ProductName 
-        { 
-            get { return m_ProductName; } 
+        public string ProductName
+        {
+            get { return m_ProductName; }
         }
 
 
@@ -188,7 +188,7 @@ namespace SweetEditor.Build
         {
             settingsCache["bundle_version"] = PlayerSettings.bundleVersion;
 
-            PlayerSettings.bundleVersion = manifest.GetVersionString();
+            PlayerSettings.bundleVersion = manifest.GetShortVersionString();
 
             OnPushManifestPlayerSettings(settingsCache, manifest);
         }
