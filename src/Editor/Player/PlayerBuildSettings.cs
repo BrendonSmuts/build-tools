@@ -258,7 +258,7 @@ namespace SweetEditor.Build
                 case BuildTarget.StandaloneWindows64:
                 case BuildTarget.StandaloneOSXIntel:
                 case BuildTarget.StandaloneOSXIntel64:
-                case BuildTarget.StandaloneOSXUniversal:
+                case BuildTarget.StandaloneOSX:
                     return BuildTargetGroup.Standalone;
                 case BuildTarget.Android:
                     return BuildTargetGroup.Android;
