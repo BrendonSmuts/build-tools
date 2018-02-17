@@ -37,10 +37,10 @@ namespace SweetEditor.Build
             }
 
             EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
-            
-            PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup,
-                m_Defines);
-            
+
+            //PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup,
+            //    m_Defines);
+
             UnityEditorInternal.InternalEditorUtility.RequestScriptReload();
 
             m_PreRunEvent.Invoke();

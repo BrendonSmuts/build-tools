@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -65,9 +66,9 @@ namespace SweetEditor.Build
                     break;
             }
 
-            m_OutputPath = "AssetBundles/" + m_BuildTarget.ToString();
+            m_OutputPath = "AssetBundles/{build_target}/Data";
             m_Id = m_BuildTarget.ToString().ToLower();
-            m_OutputExclusionFilters = new [] { "source" };
+            m_OutputExclusionFilters = new[] { "source" };
             m_StrictMode = true;
             m_BuildInclusionFilters = new[] { "*" };
             m_CompressionMode = new LZ4CompressionMode().Name;
@@ -84,7 +85,7 @@ namespace SweetEditor.Build
         {
             string buildSettingsName = name;
             string assetPath = AssetDatabase.GetAssetPath(this);
-            
+
             m_PreBuildEvent.Invoke();
 
             AssetDatabase.Refresh();
@@ -119,14 +120,16 @@ namespace SweetEditor.Build
                 options |= BuildAssetBundleOptions.StrictMode;
             }
 
-            if (!Directory.Exists(m_OutputPath))
+            string outputPath = ReplaceOutputPathVariables(m_OutputPath);
+
+            if (!Directory.Exists(outputPath))
             {
-                Directory.CreateDirectory(m_OutputPath);
+                Directory.CreateDirectory(outputPath);
             }
 
 #if UNITY_5_5_OR_NEWER
             BuildAssetBundleOptions dryOptions = options | BuildAssetBundleOptions.DryRunBuild;
-            AssetBundleManifest dryManifest = BuildPipeline.BuildAssetBundles(m_OutputPath, builds.ToArray(), dryOptions, m_BuildTarget);
+            AssetBundleManifest dryManifest = BuildPipeline.BuildAssetBundles(outputPath, builds.ToArray(), dryOptions, m_BuildTarget);
 
             if (dryManifest == null)
             {
@@ -145,7 +148,7 @@ namespace SweetEditor.Build
                 preBuildFileExisted[i] = BuildPipeline.GetCRCForAssetBundle(fileIn, out preBuildCRCs[i]);
             }
 
-            AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(m_OutputPath, builds.ToArray(), options, m_BuildTarget);
+            AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(outputPath, builds.ToArray(), options, m_BuildTarget);
 
             if (manifest == null)
             {
@@ -200,6 +203,12 @@ namespace SweetEditor.Build
             m_PostBuildEvent.Invoke(manifest);
         }
 
+        private string ReplaceOutputPathVariables(string outputPath)
+        {
+            return outputPath
+                .Replace("{id}", m_Id)
+                .Replace("{build_target}", m_BuildTarget.ToString());
+        }
 
         public void RunAndCopy(string path)
         {
@@ -259,16 +268,30 @@ namespace SweetEditor.Build
 
         public List<AssetBundleBuild> GetBuildList()
         {
-            return GetBuildListWithPredicate(v =>
-                    m_BuildInclusionFilters.Length != 0 && m_BuildInclusionFilters.Any(v.Contains));
+            return GetBuildListWithPredicate(
+                variant =>
+                {
+                    return m_BuildInclusionFilters.Any(filter =>
+                    {
+                        return Regex.IsMatch(variant, filter);
+                    });
+                });
         }
 
 
         public List<AssetBundleBuild> GetOutputList()
         {
-            return GetBuildListWithPredicate(v =>
-                m_BuildInclusionFilters.Length != 0 && m_BuildInclusionFilters.Any(v.Contains) &&
-                (m_OutputExclusionFilters.Length == 0 || !m_OutputExclusionFilters.Any(v.Contains)));
+            return GetBuildListWithPredicate(
+                variant =>
+                {
+                    return m_BuildInclusionFilters.Any(filter =>
+                    {
+                        return Regex.IsMatch(variant, filter);
+                    }) && !m_OutputExclusionFilters.Any(filter =>
+                    {
+                        return Regex.IsMatch(variant, filter);
+                    });
+                });
         }
 
 
@@ -327,11 +350,12 @@ namespace SweetEditor.Build
 
         private string GetManifestFileName()
         {
-            string[] splitPath = Path.GetFullPath(m_OutputPath).Split(Path.DirectorySeparatorChar);
+            string outputPath = ReplaceOutputPathVariables(m_OutputPath);
+            string[] splitPath = Path.GetFullPath(outputPath).Split(Path.DirectorySeparatorChar);
 
             if (splitPath.Length == 0)
             {
-                throw new InvalidOperationException(string.Format("The output path \"{0}\" is not valid.", m_OutputPath));
+                throw new InvalidOperationException(string.Format("The output path \"{0}\" is not valid.", outputPath));
             }
 
             return splitPath[splitPath.Length - 1];
@@ -391,7 +415,8 @@ namespace SweetEditor.Build
 
         public string GetBundlePath(string bundle)
         {
-            string path = Path.GetFullPath(m_OutputPath);
+            string outputPath = ReplaceOutputPathVariables(m_OutputPath);
+            string path = Path.GetFullPath(outputPath);
             path += "/" + bundle;
 
             return path;
