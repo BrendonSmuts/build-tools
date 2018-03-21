@@ -59,7 +59,7 @@ namespace SweetEditor.Build
                     break;
 #endif
                 case RuntimePlatform.OSXEditor:
-                    m_BuildTarget = BuildTarget.StandaloneOSX;
+                    m_BuildTarget = BuildTarget.StandaloneOSXUniversal;
                     break;
                 default:
                     m_BuildTarget = BuildTarget.StandaloneWindows;
