@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using SweetEngine.Build;
 using UnityEditor;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 using UnityEngine.Events;
 using Debug = UnityEngine.Debug;
@@ -141,12 +142,12 @@ namespace SweetEditor.Build
                 string buildPath = PrepareBuildPath(outputPath);
                 PushManifestPlayerSettings(settingsCache, manifest);
 
-                string error = BuildPipeline.BuildPlayer(scenes.ToArray(), buildPath, BuildTarget,
+                BuildReport report = BuildPipeline.BuildPlayer(scenes.ToArray(), buildPath, BuildTarget,
                     buildOptions);
 
-                if (!string.IsNullOrEmpty(error))
+                if (report.summary.result != BuildResult.Succeeded)
                 {
-                    throw new BuildException("Error building player: " + error);
+                    throw new BuildException("Error building player: " + report.summary.ToString());
                 }
 
                 PostProcessBuild(outputPath);
@@ -258,7 +259,7 @@ namespace SweetEditor.Build
                 case BuildTarget.StandaloneWindows64:
                 case BuildTarget.StandaloneOSXIntel:
                 case BuildTarget.StandaloneOSXIntel64:
-                case BuildTarget.StandaloneOSXUniversal:
+                case BuildTarget.StandaloneOSX:
                     return BuildTargetGroup.Standalone;
                 case BuildTarget.Android:
                     return BuildTargetGroup.Android;

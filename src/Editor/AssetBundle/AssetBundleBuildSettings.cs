@@ -59,7 +59,7 @@ namespace SweetEditor.Build
                     break;
 #endif
                 case RuntimePlatform.OSXEditor:
-                    m_BuildTarget = BuildTarget.StandaloneOSXUniversal;
+                    m_BuildTarget = BuildTarget.StandaloneOSX;
                     break;
                 default:
                     m_BuildTarget = BuildTarget.StandaloneWindows;
@@ -94,7 +94,7 @@ namespace SweetEditor.Build
             if (builds.Count == 0)
             {
                 Debug.Log(string.Format("AssetBundleBuildSettings ({0}): No valid AssetBundles found in build list.", buildSettingsName), this);
-                m_PostBuildEvent.Invoke(new AssetBundleManifest());
+                m_PostBuildEvent.Invoke(null);
                 return;
             }
 

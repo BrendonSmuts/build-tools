@@ -33,7 +33,7 @@ namespace SweetEditor.Build
                         }
                         else
                         {
-                            return BuildTarget.StandaloneOSXUniversal;
+                            return BuildTarget.StandaloneOSX;
                         }
                     case StandalonePlatform.Linux:
                         if (m_Architecture == StandaloneArchitecture.x86)
