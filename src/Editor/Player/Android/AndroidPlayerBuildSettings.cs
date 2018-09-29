@@ -12,8 +12,8 @@ namespace SweetEditor.Build
     public sealed class AndroidPlayerBuildSettings : PlayerBuildSettings
     {
         [Header("Android")]
-        [SerializeField]
-        private string m_BundleIdentifier = default(string);
+        [SerializeField] private string m_BundleIdentifier = default(string);
+        [SerializeField] private AndroidBuildSystem m_BuildSystem = default(AndroidBuildSystem);
         [SerializeField] private string m_Keystore = default(string);
         [SerializeField] private string m_KeystorePassword = default(string);
         [SerializeField] private string m_KeyAlias = default(string);
@@ -102,6 +102,9 @@ namespace SweetEditor.Build
 
             settingsCache["androidBuildSubtarget"] = EditorUserBuildSettings.androidBuildSubtarget;
             EditorUserBuildSettings.androidBuildSubtarget = m_DeviceRequirement.TextureCompression;
+
+            settingsCache["androidBuildSystem"] = EditorUserBuildSettings.androidBuildSystem;
+            EditorUserBuildSettings.androidBuildSystem = m_BuildSystem;
         }
 
 
@@ -129,6 +132,7 @@ namespace SweetEditor.Build
             TrySetValue<string>((v) => PlayerSettings.Android.keyaliasPass = v, "keyaliasPass", settingsCache);
             TrySetValue<bool>((v) => PlayerSettings.Android.useAPKExpansionFiles = v, "useAPKExpansionFiles", settingsCache);
 #endif
+            TrySetValue<AndroidBuildSystem>((v) => EditorUserBuildSettings.androidBuildSystem = v, "androidBuildSystem", settingsCache);
             TrySetValue<MobileTextureSubtarget>((v) => EditorUserBuildSettings.androidBuildSubtarget = v, "androidBuildSubtarget", settingsCache);
             TrySetValue<int>((v) => PlayerSettings.Android.bundleVersionCode = v, "bundleVersionCode", settingsCache);
         }
