@@ -9,10 +9,12 @@ using System.Collections.Generic;
 using System.IO;
 using SweetEngine.Build;
 using UnityEditor;
+using UnityEngine;
+#if UNITY_IOS
 using UnityEditor.iOS;
 using UnityEditor.iOS.Xcode;
-using UnityEngine;
 using BuildPipeline = UnityEditor.iOS.BuildPipeline;
+#endif
 
 
 namespace SweetEditor.Build
@@ -102,10 +104,13 @@ namespace SweetEditor.Build
 #endif
 #endif
 
+
             if (useOnDemandResources)
             {
+#if UNITY_IOS
                 //BuildPipeline.collectResources += OnBuildPipelineCollectResources;
                 BuildPipeline.collectInitialInstallTags += OnBuildPipelineCollectInitialInstallTags;
+#endif
             }
         }
 
@@ -140,8 +145,10 @@ namespace SweetEditor.Build
 
             if (useOnDemandResources)
             {
+#if UNITY_IOS
                 BuildPipeline.collectResources -= OnBuildPipelineCollectResources;
                 BuildPipeline.collectInitialInstallTags -= OnBuildPipelineCollectInitialInstallTags;
+#endif
             }
 
             TrySetValue<string>((v) => PlayerSettings.iOS.buildNumber = v, "buildNumber", settingsCache);
@@ -150,6 +157,7 @@ namespace SweetEditor.Build
 
         protected override void OnPostProcessBuild(string playerPath)
         {
+#if UNITY_IOS
             string projPath = playerPath + "/Unity-iPhone.xcodeproj/project.pbxproj";
 
             PBXProject proj = new PBXProject();
@@ -197,9 +205,10 @@ namespace SweetEditor.Build
             }
 
             plist.WriteToFile(plistPath);
+#endif
         }
 
-
+#if UNITY_IOS
         private Resource[] OnBuildPipelineCollectResources()
         {
             return new Resource[0];
@@ -248,6 +257,7 @@ namespace SweetEditor.Build
             //
             //return resources.ToArray();
         }
+#endif
 
 
         private string[] OnBuildPipelineCollectInitialInstallTags()
