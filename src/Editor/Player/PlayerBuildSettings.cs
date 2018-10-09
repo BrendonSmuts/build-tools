@@ -5,6 +5,9 @@ using System.IO;
 using System.Linq;
 using SweetEngine.Build;
 using UnityEditor;
+#if UNITY_2018_1_OR_NEWER
+using UnityEditor.Build.Reporting;
+#endif
 using UnityEngine;
 using UnityEngine.Events;
 using Debug = UnityEngine.Debug;
@@ -25,6 +28,7 @@ namespace SweetEditor.Build
         [SerializeField] private string m_OutputPath = default(string);
         [SerializeField] private bool m_IsDevelopment = default(bool);
         [SerializeField] private string m_Defines = default(string);
+        [SerializeField] private bool m_FailBuildOnErrors = default(bool);
         [Header("Events")]
         [SerializeField]
         private UnityEvent m_PreExportEvent = default(UnityEvent);
@@ -141,10 +145,27 @@ namespace SweetEditor.Build
                 string buildPath = PrepareBuildPath(outputPath);
                 PushManifestPlayerSettings(settingsCache, manifest);
 
-                string report = BuildPipeline.BuildPlayer(scenes.ToArray(), buildPath, BuildTarget,
-                    buildOptions);
+#if UNITY_2018_1_OR_NEWER
+                BuildReport report = BuildPipeline.BuildPlayer(scenes.ToArray(), buildPath, BuildTarget, buildOptions);
+                
+                if (report.summary.result == BuildResult.Failed)
+                {
+                    throw new BuildException("Build player FAILED: BuildResult is Failed");
+                }
 
-                Debug.Log("Report: " + report);
+                if (report.summary.totalErrors > 0 &&
+                    m_FailBuildOnErrors)
+                {
+                    throw new BuildException($"Build player FAILED: {report.summary.totalErrors} error(s)");
+                }
+#else
+                string error = BuildPipeline.BuildPlayer(scenes.ToArray(), buildPath, BuildTarget, buildOptions);
+
+                if (!string.IsNullOrEmpty())
+                {
+                    throw new BuildException("Build player FAILED: " + error);
+                }
+#endif
 
                 PostProcessBuild(outputPath);
             }
@@ -253,9 +274,12 @@ namespace SweetEditor.Build
                 case BuildTarget.StandaloneLinuxUniversal:
                 case BuildTarget.StandaloneWindows:
                 case BuildTarget.StandaloneWindows64:
+#if !UNITY_2017_3_OR_NEWER
                 case BuildTarget.StandaloneOSXIntel:
                 case BuildTarget.StandaloneOSXIntel64:
-                case BuildTarget.StandaloneOSXUniversal:
+#else
+#endif
+                case BuildTarget.StandaloneOSX:
                     return BuildTargetGroup.Standalone;
                 case BuildTarget.Android:
                     return BuildTargetGroup.Android;

@@ -24,16 +24,22 @@ namespace SweetEditor.Build
     {
         private static readonly string _DefaultiOSAutomaticSignTeamId = "DefaultiOSAutomaticSignTeamId";
         [Header("iOS")]
-        [SerializeField]
-        private string m_BundleIdentifier = default(string);
+        [SerializeField] private string m_BundleIdentifier = default(string);
         [SerializeField] private ScriptCallOptimizationLevel m_ScriptCallOptimization = default(ScriptCallOptimizationLevel);
         [SerializeField] private bool m_EnableBitcode = default(bool);
+        [SerializeField] private bool m_EnableGameCenter = default(bool);
+        [SerializeField] private bool m_EnableInAppPurchase = default(bool);
+        [SerializeField] private bool m_EnableKeychainSharing = default(bool);
+        [SerializeField] private string[] m_KeychainAccessGroups = default(string[]);
+        [SerializeField] private bool m_EnablePushNotifications = default(bool);
+        [SerializeField] private bool m_PushNotificationsDevelopment = default(bool);
         [SerializeField] private bool m_EnableOnDemandResources = default(bool);
         [SerializeField] private bool m_EnableAppSlicing = default(bool);
         //[SerializeField] private DeviceVariantMap[] m_VariantMaps = default(DeviceVariantMap[]);
         //[SerializeField] private string[] m_InitialInstallTags = default(string[]);
         [SerializeField] private bool m_AutomaticSign = default(bool);
         [SerializeField] private string m_AppleDeveloperTeamId = default(string);
+        [SerializeField] private string m_iOSProvisioningProfile = default(string);
         [SerializeField] private string[] m_Frameworks = default(string[]);
         [SerializeField] private FileInfo[] m_Files = default(FileInfo[]);
         [SerializeField] private InfoPlistEntry[] m_InfoPlistEntries = default(InfoPlistEntry[]);
@@ -98,6 +104,9 @@ namespace SweetEditor.Build
 #if HAS_TEAM_ID
             settingsCache["appleDeveloperTeamID"] = PlayerSettings.iOS.appleDeveloperTeamID;
             PlayerSettings.iOS.appleDeveloperTeamID = m_AppleDeveloperTeamId;
+
+            settingsCache["iOSManualProvisioningProfileID"] = PlayerSettings.iOS.iOSManualProvisioningProfileID;
+            PlayerSettings.iOS.iOSManualProvisioningProfileID = m_iOSProvisioningProfile;
 #if HAS_AUTOMATIC_SIGNING
             settingsCache["appleEnableAutomaticSigning"] = PlayerSettings.iOS.appleEnableAutomaticSigning;
             PlayerSettings.iOS.appleEnableAutomaticSigning = m_AutomaticSign;
@@ -136,6 +145,7 @@ namespace SweetEditor.Build
             TrySetValue<bool>((v) => PlayerSettings.iOS.useOnDemandResources = v, "useOnDemandResources", settingsCache);
 #if HAS_TEAM_ID
             TrySetValue<string>((v) => PlayerSettings.iOS.appleDeveloperTeamID = v, "appleDeveloperTeamID", settingsCache);
+            TrySetValue<string>((v) => PlayerSettings.iOS.iOSManualProvisioningProfileID = v, "iOSManualProvisioningProfileID", settingsCache);
 #if HAS_AUTOMATIC_SIGNING
             TrySetValue<bool>((v) => PlayerSettings.iOS.appleEnableAutomaticSigning = v, "appleEnableAutomaticSigning", settingsCache);
 #endif
@@ -158,14 +168,19 @@ namespace SweetEditor.Build
         protected override void OnPostProcessBuild(string playerPath)
         {
 #if UNITY_IOS
-            string projPath = playerPath + "/Unity-iPhone.xcodeproj/project.pbxproj";
+            string projPath = Path.Combine(playerPath, "Unity-iPhone.xcodeproj/project.pbxproj");
 
             PBXProject proj = new PBXProject();
             proj.ReadFromFile(projPath);
 
             string target = proj.TargetGuidByName("Unity-iPhone");
-
+           
             proj.SetBuildProperty(target, "ENABLE_BITCODE", m_EnableBitcode ? "YES" : "NO");
+
+            if (string.IsNullOrEmpty(m_AppleDeveloperTeamId))
+            {
+                proj.SetBuildProperty(target, "DEVELOPMENT_TEAM", m_AppleDeveloperTeamId);
+            }
 
             for (int i = 0; i < m_Frameworks.Length; i++)
             {
@@ -176,12 +191,12 @@ namespace SweetEditor.Build
             for (int i = 0; i < m_Files.Length; i++)
             {
                 var s = m_Files[i];
-                proj.AddFileToBuild(target, proj.AddFile("usr/lib/" + s.Name, "Frameworks/" + s.Name, (PBXSourceTree)s.SourceTree));
+                proj.AddFileToBuild(target, proj.AddFile(Path.Combine("usr/lib/", s.Name), Path.Combine("Frameworks/", s.Name), (PBXSourceTree)s.SourceTree));
             }
 
             proj.WriteToFile(projPath);
 
-            string plistPath = playerPath + "/Info.plist";
+            string plistPath = Path.Combine(playerPath, "Info.plist");
             PlistDocument plist = new PlistDocument();
             plist.ReadFromFile(plistPath);
             PlistElementDict root = plist.root;
@@ -205,6 +220,30 @@ namespace SweetEditor.Build
             }
 
             plist.WriteToFile(plistPath);
+
+            var capabilityManager = new ProjectCapabilityManager(projPath, "Unity-iPhone/app.entitlements", "Unity-iPhone");
+
+            if (m_EnableGameCenter)
+            {
+                capabilityManager.AddGameCenter();                
+            }
+
+            if (m_EnableInAppPurchase)
+            {
+                capabilityManager.AddInAppPurchase();
+            }
+
+            if (m_EnableKeychainSharing)
+            {
+                capabilityManager.AddKeychainSharing(m_KeychainAccessGroups);
+            }
+
+            if (m_EnablePushNotifications)
+            {
+                capabilityManager.AddPushNotifications(m_PushNotificationsDevelopment);
+            }
+
+            capabilityManager.WriteToFile();
 #endif
         }
 
