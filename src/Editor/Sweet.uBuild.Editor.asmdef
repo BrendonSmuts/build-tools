@@ -1,0 +1,16 @@
+{
+    "name": "Sweet.uBuild.Editor",
+    "references": [
+        "Sweet.uBuild"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}
