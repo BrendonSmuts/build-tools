@@ -29,6 +29,7 @@ namespace SweetEditor.Build
         [UsedImplicitly]
         private static void RunPlayerBuildSettingsCmdLine()
         {
+            Console.WriteLine("Writing to console!");
             string[] args = Environment.CommandLine.Split(' ');
 
             int buildSettingsIndex = Array.IndexOf(args, "-buildSettings");
