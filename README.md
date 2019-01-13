@@ -1,6 +1,6 @@
-# Sweet.uBuild
+# sweet-build-tools
 
-uBuild provides an alternative to configuring build options without using Unity’s default player settings.
+BuildTools provides an alternative to configuring build options without using Unity’s default player settings.
 
 Build settings are created as individual assets inside the project structure, allowing for quick and consistent switching between different configurations without requiring error prone hand tweaking.
 
