@@ -41,7 +41,7 @@ namespace Sweet.BuildTools.Editor
             PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup,
                 m_Defines);
 
-            UnityEditorInternal.InternalEditorUtility.RequestScriptReload();
+            EditorUtility.RequestScriptReload();
 
             m_PreRunEvent.Invoke();
             EditorSceneManager.OpenScene(AssetDatabase.GetAssetPath(m_RunScene));
