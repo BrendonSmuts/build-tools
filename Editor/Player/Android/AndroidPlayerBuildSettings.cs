@@ -12,6 +12,7 @@ namespace Sweet.BuildTools.Editor
         [Header("Android")]
         [SerializeField] private string m_BundleIdentifier = default(string);
         [SerializeField] private AndroidBuildSystem m_BuildSystem = default(AndroidBuildSystem);
+        [SerializeField] private bool m_ExportAsGoogleAndroidProject = default;
         [SerializeField] private string m_Keystore = default(string);
         [SerializeField] private string m_KeystorePassword = default(string);
         [SerializeField] private string m_KeyAlias = default(string);
@@ -97,6 +98,9 @@ namespace Sweet.BuildTools.Editor
 
             settingsCache["androidBuildSystem"] = EditorUserBuildSettings.androidBuildSystem;
             EditorUserBuildSettings.androidBuildSystem = m_BuildSystem;
+            
+            settingsCache["exportAsGoogleAndroidProject"] = EditorUserBuildSettings.exportAsGoogleAndroidProject;
+            EditorUserBuildSettings.exportAsGoogleAndroidProject = m_ExportAsGoogleAndroidProject;
         }
 
         protected override void OnPushManifestPlayerSettings(Dictionary<string, object> settingsCache,
